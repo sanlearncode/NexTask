@@ -1,8 +1,66 @@
 const API = "/.netlify/functions/api";
 
+async function register() {
+  const username = document.getElementById("user").value;
+  const password = document.getElementById("pass").value;
+
+  const res = await fetch(API + "/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Đăng ký thành công");
+
+    // ✅ thêm dòng này để xóa input sau khi đăng ký thành công
+    document.getElementById("user").value = "";
+    document.getElementById("pass").value = "";
+
+  } else {
+    alert(data.error || "Lỗi đăng ký");
+  }
+}
+
+async function login() {
+  const username = document.getElementById("user").value;
+  const password = document.getElementById("pass").value;
+
+  const res = await fetch(API + "/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+    alert("Đăng nhập thành công"); // ✅ thêm dòng này
+    load();
+  } else {
+    alert("Sai tài khoản hoặc mật khẩu");
+  }
+}
+
+
 async function load() {
   try {
-    const r = await fetch(API).then(r => r.json());
+    const res = await fetch(API, {
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+
+  const r = await res.json();
+
+  if (res.status === 401) {
+    localStorage.removeItem("token");
+    alert("Bạn cần đăng nhập lại");
+    return;
+  }
     const list = document.getElementById("list");
     const names = r.names || [];
     if (!names.length) {
@@ -21,13 +79,25 @@ async function add() {
   const inp = document.getElementById("inp");
   const name = inp.value.trim();
   if (!name) return;
-  await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
+  await fetch(API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({ name })
+  });  
   inp.value = "";
   load();
 }
 
 async function del(id) {
-  await fetch(`${API}/${id}`, { method: "DELETE" });
+  await fetch(`${API}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+  });
   load();
 }
 
@@ -35,3 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("inp").addEventListener("keydown", e => e.key === "Enter" && add());
   load();
 });
+
+function logout() {
+  localStorage.removeItem("token");
+  location.reload();
+}
