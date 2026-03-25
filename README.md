@@ -9,15 +9,14 @@ Dự án được xây dựng nhằm:
 - Tăng hiệu quả làm việc cá nhân và nhóm
 - Tạo giao diện thân thiện, dễ sử dụng
 
-
 Chức năng chính
 
-- ➕ Thêm công việc mới
-- 📝 Chỉnh sửa nội dung công việc
-- ❌ Xóa công việc
-- ✅ Đánh dấu hoàn thành
-- 📂 Phân loại công việc theo trạng thái
-- 🔍 Tìm kiếm công việc
-- 📅 Theo dõi deadline
+➕ Thêm công việc mới
+📝 Chỉnh sửa nội dung công việc
+❌ Xóa công việc
+✅ Đánh dấu hoàn thành
+📂 Phân loại công việc theo trạng thái
+🔍 Tìm kiếm công việc
+📅 Theo dõi deadline
 
-Phát triển bởi Hà Thái San và Giang Thành VinhVinh
+Phát triển bởi Hà Thái San và Giang Thành Vinh
