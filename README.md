@@ -11,8 +11,7 @@ Dự án được xây dựng nhằm:
 
 Chức năng chính
 
-➕ Thêm công việc mới
-
+-➕ Thêm công việc mới
 -📝 Chỉnh sửa nội dung công việc
 -❌ Xóa công việc
 -✅ Đánh dấu hoàn thành
