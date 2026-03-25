@@ -10,9 +10,17 @@
 
 <h1>NexTask</h1>
 
+<div class="auth">
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Register</button>
+</div>
+
 <div class="add">
   <input id="inp" placeholder="Nhập tên..." />
   <button onclick="add()">Thêm</button>
+  <button onclick="logout()">Logout</button>
 </div>
 
 <ul id="list"></ul>
