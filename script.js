@@ -14,8 +14,6 @@ async function register() {
 
   if (res.ok) {
     alert("Đăng ký thành công");
-
-    // ✅ thêm dòng này để xóa input sau khi đăng ký thành công
     document.getElementById("user").value = "";
     document.getElementById("pass").value = "";
 
@@ -38,7 +36,7 @@ async function login() {
 
   if (data.token) {
     localStorage.setItem("token", data.token);
-    alert("Đăng nhập thành công"); // ✅ thêm dòng này
+    alert("Đăng nhập thành công");
     load();
   } else {
     alert("Sai tài khoản hoặc mật khẩu");
