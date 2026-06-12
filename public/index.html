@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXTASK - Quản Lý Công Việc</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app" class="container">
+    <!-- Login/Register Screen -->
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-container">
+        <div class="auth-header">
+          <h1>NEXTASK</h1>
+          <p>Quản Lý Công Việc Hiệu Quả</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form">
+          <h2>Đăng Nhập</h2>
+          <form onsubmit="handleLogin(event)">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
+            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+          </form>
+          <p>Chưa có tài khoản? <a href="#" onclick="toggleAuthForm()">Đăng ký ngay</a></p>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-form" style="display: none;">
+          <h2>Đăng Ký</h2>
+          <form onsubmit="handleRegister(event)">
+            <input type="text" id="regUsername" placeholder="Tên người dùng" required>
+            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="password" id="regPassword" placeholder="Mật khẩu" required>
+            <input type="password" id="regPasswordConfirm" placeholder="Xác nhận mật khẩu" required>
+            <button type="submit" class="btn btn-primary">Đăng Ký</button>
+          </form>
+          <p>Đã có tài khoản? <a href="#" onclick="toggleAuthForm()">Đăng nhập</a></p>
+        </div>
+
+        <!-- Admin Link -->
+        <div class="admin-link">
+          <a href="#" onclick="toggleAdminLogin()">Quản trị viên →</a>
+        </div>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="adminLoginForm" class="auth-container" style="display: none;">
+        <div class="auth-header">
+          <h1>NEXTASK ADMIN</h1>
+          <p>Đăng Nhập Quản Trị</p>
+        </div>
+        <div class="auth-form">
+          <form onsubmit="handleAdminLogin(event)">
+            <input type="email" id="adminEmail" placeholder="Email" value="admin@nextask.com">
+            <input type="password" id="adminPassword" placeholder="Mật khẩu">
+            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+          </form>
+          <p><a href="#" onclick="toggleAdminLogin()">← Quay lại</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="dashboard" style="display: none;">
+      <header class="dashboard-header">
+        <div class="header-left">
+          <h1>NEXTASK</h1>
+        </div>
+        <div class="header-right">
+          <span id="userName" class="user-name"></span>
+          <button class="btn btn-outline" onclick="handleLogout()">Đăng Xuất</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <h3>Lọc</h3>
+            <button class="filter-btn active" onclick="filterTasks('all')">Tất Cả</button>
+            <button class="filter-btn" onclick="filterTasks('todo')">Chưa Làm</button>
+            <button class="filter-btn" onclick="filterTasks('in_progress')">Đang Làm</button>
+            <button class="filter-btn" onclick="filterTasks('done')">Đã Làm</button>
+          </div>
+
+          <div class="sidebar-section">
+            <h3>Thẻ</h3>
+            <div id="tagList" class="tag-list"></div>
+            <button class="btn btn-small" onclick="showAddTagModal()">+ Thêm Thẻ</button>
+          </div>
+
+          <div class="sidebar-section">
+            <h3>Thống Kê</h3>
+            <div id="stats" class="stats">
+              <div class="stat-item">
+                <span>Tổng:</span>
+                <strong id="totalTasks">0</strong>
+              </div>
+              <div class="stat-item">
+                <span>Hoàn thành:</span>
+                <strong id="completedTasks">0</strong>
+              </div>
+              <div class="stat-item">
+                <span>Tỷ lệ:</span>
+                <strong id="completionRate">0%</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm công việc..." 
+                   onkeyup="handleSearch()">
+            <div class="sort-controls">
+              <select id="sortBy" onchange="handleSort()">
+                <option value="">Sắp xếp mặc định</option>
+                <option value="deadline">Theo deadline</option>
+                <option value="status">Theo trạng thái</option>
+                <option value="importance">Theo độ quan trọng</option>
+                <option value="urgency">Theo độ khẩn cấp</option>
+              </select>
+              <select id="sortOrder" onchange="handleSort()">
+                <option value="asc">Tăng dần</option>
+                <option value="desc">Giảm dần</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="add-task-area">
+            <button class="btn btn-primary btn-large" onclick="showAddTaskModal()">
+              ➕ Thêm Công Việc Mới
+            </button>
+          </div>
+
+          <div id="taskList" class="task-list"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="dashboard" style="display: none;">
+      <header class="dashboard-header">
+        <div class="header-left">
+          <h1>NEXTASK - ADMIN</h1>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-outline" onclick="handleAdminLogout()">Đăng Xuất</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <aside class="sidebar">
+          <button class="sidebar-btn active" onclick="showAdminSection('statistics')">
+            📊 Thống Kê
+          </button>
+          <button class="sidebar-btn" onclick="showAdminSection('users')">
+            👥 Quản Lý Người Dùng
+          </button>
+        </aside>
+
+        <main class="main-content">
+          <!-- Statistics Section -->
+          <div id="statisticsSection" class="admin-section">
+            <h2>Thống Kê Hệ Thống</h2>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Tổng Người Dùng</div>
+                <div class="stat-value" id="statTotalUsers">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Tổng Công Việc</div>
+                <div class="stat-value" id="statTotalTasks">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Công Việc Hoàn Thành</div>
+                <div class="stat-value" id="statCompletedTasks">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Tỷ Lệ Hoàn Thành</div>
+                <div class="stat-value" id="statCompletionRate">0%</div>
+              </div>
+            </div>
+
+            <div class="usage-table">
+              <h3>Thống Kê Sử Dụng Người Dùng</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Người Dùng</th>
+                    <th>Số Lần Đăng Nhập</th>
+                    <th>Thời Gian Sử Dụng (giờ)</th>
+                  </tr>
+                </thead>
+                <tbody id="usageTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Users Management Section -->
+          <div id="usersSection" class="admin-section" style="display: none;">
+            <h2>Quản Lý Người Dùng</h2>
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>Tên Người Dùng</th>
+                  <th>Email</th>
+                  <th>Ngày Tạo</th>
+                  <th>Lần Đăng Nhập Gần Nhất</th>
+                  <th>Số Công Việc</th>
+                  <th>Trạng Thái</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Add/Edit Task Modal -->
+  <div id="taskModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="taskModalTitle">Thêm Công Việc</h2>
+        <button class="close-btn" onclick="closeTaskModal()">&times;</button>
+      </div>
+      <form onsubmit="handleSaveTask(event)">
+        <input type="hidden" id="taskId">
+        
+        <div class="form-group">
+          <label>Tiêu Đề *</label>
+          <input type="text" id="taskTitle" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nội Dung</label>
+          <textarea id="taskContent"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Thời Hạn</label>
+            <input type="datetime-local" id="taskDeadline">
+          </div>
+
+          <div class="form-group">
+            <label>Trạng Thái</label>
+            <select id="taskStatus">
+              <option value="todo">Chưa Làm</option>
+              <option value="in_progress">Đang Làm</option>
+              <option value="done">Đã Làm</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Độ Quan Trọng</label>
+            <select id="taskImportance">
+              <option value="low">Thấp</option>
+              <option value="medium" selected>Trung Bình</option>
+              <option value="high">Cao</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Độ Khẩn Cấp</label>
+            <select id="taskUrgency">
+              <option value="low">Thấp</option>
+              <option value="medium" selected>Trung Bình</option>
+              <option value="high">Cao</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Thẻ</label>
+          <div id="tagCheckboxes" class="tag-checkboxes"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Lưu</button>
+          <button type="button" class="btn btn-outline" onclick="closeTaskModal()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Tag Modal -->
+  <div id="tagModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Thêm Thẻ Mới</h2>
+        <button class="close-btn" onclick="closeTagModal()">&times;</button>
+      </div>
+      <form onsubmit="handleAddTag(event)">
+        <div class="form-group">
+          <label>Tên Thẻ (Tối Đa 20 Ký Tự)</label>
+          <input type="text" id="tagName" maxlength="20" required>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Thêm</button>
+          <button type="button" class="btn btn-outline" onclick="closeTagModal()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Task Modal -->
+  <div id="viewTaskModal" class="modal" style="display: none;">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="viewTaskTitle"></h2>
+        <button class="close-btn" onclick="closeViewTaskModal()">&times;</button>
+      </div>
+      <div class="task-details">
+        <div class="detail-section">
+          <h3>Nội Dung</h3>
+          <p id="viewTaskContent"></p>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-section">
+            <h3>Thời Hạn</h3>
+            <p id="viewTaskDeadline"></p>
+          </div>
+          <div class="detail-section">
+            <h3>Trạng Thái</h3>
+            <p id="viewTaskStatus"></p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-section">
+            <h3>Độ Quan Trọng</h3>
+            <p id="viewTaskImportance"></p>
+          </div>
+          <div class="detail-section">
+            <h3>Độ Khẩn Cấp</h3>
+            <p id="viewTaskUrgency"></p>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Thẻ</h3>
+          <div id="viewTaskTags"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="editTaskBtn" onclick="editCurrentTask()">Chỉnh Sửa</button>
+          <button class="btn btn-danger" onclick="deleteCurrentTask()">Xóa</button>
+          <button class="btn btn-outline" onclick="closeViewTaskModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
