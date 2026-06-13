@@ -1,7 +1,23 @@
 {
-    "name": "NexTask",
-    "version": "1.0.0",
-    "dependencies": {
-      "pg": "^8.11.3"
-    }
-  }
+  "name": "nextask",
+  "version": "1.0.0",
+  "description": "Website quản lý công việc NexTask – Nhóm 17",
+  "main": "netlify/functions/api.js",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "authors": [
+    "Hà Thái San <202414341>",
+    "Giang Thành Vinh <202414451>"
+  ],
+  "license": "MIT"
+}
