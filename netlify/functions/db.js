@@ -106,12 +106,11 @@ CREATE INDEX IF NOT EXISTS idx_tags_user_id     ON tags(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_user_id ON activity_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_started ON activity_logs(started_at);
 
--- ════════════════════════════════════════════════
+
 -- SEED – tài khoản admin mặc định
--- password = hash("admin123") = "-539701190"
--- ════════════════════════════════════════════════
+
 INSERT INTO admins (email, password)
-VALUES ('admin@nextask.vn', '-539701190')
+VALUES ('admin@nextask.vn', '92668751')
 ON CONFLICT (email) DO NOTHING;
 `;
 
