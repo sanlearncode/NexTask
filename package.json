@@ -1,7 +1,7 @@
 {
   "name": "nextask",
   "version": "1.0.0",
-  "description": "Website quản lý công việc NexTask – Nhóm 17",
+  "description": "Website quản lý công việc NexTask",
   "main": "netlify/functions/api.js",
   "scripts": {
     "dev": "netlify dev"

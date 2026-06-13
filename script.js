@@ -1,24 +1,15 @@
-// ════════════════════════════════════════════════
-//  NexTask – script.js
-//  Logic frontend: auth, CRUD tasks/tags, thống kê,
-//  admin. Dữ liệu lưu localStorage; swap sang API
-//  bằng cách thay hàm getTasks / saveTasks.
-// ════════════════════════════════════════════════
 
-// ── STORAGE ─────────────────────────────────────
 const DB = {
   get(k)    { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
   set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
 };
 
-// ── HASH ĐƠN GIẢN (demo, không dùng production) ─
 function hash(s) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
   return String(h);
 }
 
-// ── SEED DỮ LIỆU MẪU ────────────────────────────
 function initDB() {
   if (!DB.get("nt_users")) {
     DB.set("nt_users", [
@@ -44,14 +35,10 @@ function initDB() {
   }
 }
 
-// ── STATE ────────────────────────────────────────
 let currentUser    = null;
 let editingTaskId  = null;
 let activeTagFilter = null;
 
-// ════════════════════════════════════════════════
-//  AUTH
-// ════════════════════════════════════════════════
 let loginRole = "user";
 
 function setRole(r) {
@@ -121,9 +108,6 @@ function logout() {
   document.getElementById("loginPass").value  = "";
 }
 
-// ════════════════════════════════════════════════
-//  KHỞI TẠO APP
-// ════════════════════════════════════════════════
 function initApp() {
   const name = currentUser.name || currentUser.email;
   document.getElementById("userDisplayName").textContent = name;
@@ -139,9 +123,6 @@ function initApp() {
   showView("tasks");
 }
 
-// ════════════════════════════════════════════════
-//  VIEWS
-// ════════════════════════════════════════════════
 function showView(v) {
   ["tasks", "stats", "admin"].forEach(x => {
     document.getElementById("view-" + x).style.display = x === v ? "block" : "none";
@@ -154,9 +135,6 @@ function showView(v) {
   if (v === "admin") renderAdmin();
 }
 
-// ════════════════════════════════════════════════
-//  DỮ LIỆU CÔNG VIỆC
-// ════════════════════════════════════════════════
 function getTasks() {
   const all = DB.get("nt_tasks") || [];
   return currentUser.role === "admin" ? all : all.filter(t => t.userId === currentUser.id);
@@ -168,9 +146,6 @@ function saveTasks(myTasks) {
   DB.set("nt_tasks", currentUser.role === "admin" ? myTasks : [...others, ...myTasks]);
 }
 
-// ════════════════════════════════════════════════
-//  LỌC & RENDER DANH SÁCH
-// ════════════════════════════════════════════════
 function filterTasks() {
   let tasks = getTasks();
   const q       = (document.getElementById("searchInput").value || "").toLowerCase();
@@ -197,7 +172,6 @@ function filterTasks() {
   document.getElementById("taskCountLabel").textContent = `${tasks.length} công việc`;
 }
 
-// ── Lookup maps ──────────────────────────────────
 const STATUS_MAP = {
   todo:  { label: "Chưa làm", cls: "badge-status-todo"  },
   doing: { label: "Đang làm", cls: "badge-status-doing" },
@@ -297,7 +271,6 @@ function deleteTask(id) {
   showToast("Đã xóa công việc", "error");
 }
 
-// ── Stat cards (topbar) ──────────────────────────
 function updateTopStats() {
   const tasks   = getTasks();
   const today   = todayStr();
@@ -314,9 +287,6 @@ function updateTopStats() {
   document.getElementById("badge-active").textContent = tasks.filter(t => t.status !== "done").length;
 }
 
-// ════════════════════════════════════════════════
-//  MODAL CÔNG VIỆC
-// ════════════════════════════════════════════════
 function openTaskModal(task = null) {
   editingTaskId = task ? task.id : null;
   document.getElementById("modalTitle").textContent   = task ? "Chỉnh sửa công việc" : "Tạo công việc mới";
@@ -387,9 +357,6 @@ function saveTask() {
   showToast(editingTaskId ? "Đã cập nhật công việc" : "Đã tạo công việc mới ✓", "success");
 }
 
-// ════════════════════════════════════════════════
-//  NHÃN DÁN
-// ════════════════════════════════════════════════
 function renderTagSelector(selected = []) {
   const tags = DB.get("nt_tags") || [];
   document.getElementById("tagSelector").innerHTML = tags.length
@@ -474,9 +441,6 @@ function deleteTag(name) {
   showToast("Đã xóa nhãn dán");
 }
 
-// ════════════════════════════════════════════════
-//  VIEW THỐNG KÊ
-// ════════════════════════════════════════════════
 function renderStats() {
   const tasks   = getTasks();
   const today   = todayStr();
@@ -500,7 +464,6 @@ function renderStats() {
        ${barColHTML("Đã làm",   done,  maxS, "#22C55E")}
      </div>`;
 
-  // Progress theo độ quan trọng
   const impLabels = { 3: "🔴 Quan trọng cao", 2: "🟡 Quan trọng TB", 1: "🟢 Quan trọng thấp" };
   const impColors = { 3: "var(--red)", 2: "var(--orange)", 1: "var(--green)" };
   document.getElementById("impChart").innerHTML =
@@ -512,7 +475,6 @@ function renderStats() {
     }).join("") +
     `</div>`;
 
-  // Ma trận Eisenhower
   const q1 = tasks.filter(t => t.importance === 3 && t.urgency === 3);
   const q2 = tasks.filter(t => t.importance === 3 && t.urgency  <  3);
   const q3 = tasks.filter(t => t.importance  <  3 && t.urgency === 3);
@@ -553,9 +515,6 @@ function matrixCellHTML(cls, label, action, tasks) {
   </div>`;
 }
 
-// ════════════════════════════════════════════════
-//  VIEW ADMIN
-// ════════════════════════════════════════════════
 function renderAdmin() {
   const users    = DB.get("nt_users") || [];
   const allTasks = DB.get("nt_tasks") || [];
@@ -604,9 +563,6 @@ function toggleLock(id) {
   }
 }
 
-// ════════════════════════════════════════════════
-//  UTILS
-// ════════════════════════════════════════════════
 function esc(s) {
   return String(s || "")
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -625,10 +581,8 @@ function showToast(msg, type = "") {
   setTimeout(() => t.remove(), 3000);
 }
 
-// ── Keyboard shortcuts ───────────────────────────
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") { closeTaskModal(); closeTagModal(); }
 });
 
-// ── Boot ─────────────────────────────────────────
 initDB();

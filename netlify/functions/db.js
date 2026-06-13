@@ -1,19 +1,9 @@
-// ════════════════════════════════════════════════
-//  netlify/functions/db.js
-//  Kết nối PostgreSQL và khởi tạo schema CSDL
-//  theo thiết kế Nhóm 17 – NexTask
-// ════════════════════════════════════════════════
-
 const { Client } = require("pg");
 
-// ════════════════════════════════════════════════
-//  SQL SCHEMA – tạo đầy đủ 7 bảng theo thiết kế
-// ════════════════════════════════════════════════
 const INIT_SQL = `
 
 -- ────────────────────────────────────────────────
--- 1. BẢNG QUẢN TRỊ VIÊN
---    Lưu tài khoản admin, dùng để đăng nhập quản trị
+-- BẢNG QUẢN TRỊ VIÊN
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS admins (
   id          SERIAL       PRIMARY KEY,
@@ -23,8 +13,7 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- ────────────────────────────────────────────────
--- 2. BẢNG NGƯỜI DÙNG
---    Mỗi người dùng có tên đăng nhập và email duy nhất
+-- BẢNG NGƯỜI DÙNG
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
   id          SERIAL       PRIMARY KEY,
@@ -37,9 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- ────────────────────────────────────────────────
--- 3. BẢNG LỊCH SỬ HOẠT ĐỘNG
---    Theo dõi từng phiên đăng nhập của người dùng,
---    dùng để thống kê thời gian sử dụng website
+-- BẢNG LỊCH SỬ HOẠT ĐỘNG
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS activity_logs (
   id            SERIAL       PRIMARY KEY,
@@ -51,9 +38,7 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 );
 
 -- ────────────────────────────────────────────────
--- 4. BẢNG THỐNG KÊ
---    Liên kết admin với các lần hoạt động người dùng
---    mà admin đã xem/truy xuất báo cáo
+-- BẢNG THỐNG KÊ
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS statistics (
   id            SERIAL   PRIMARY KEY,
@@ -65,9 +50,7 @@ CREATE TABLE IF NOT EXISTS statistics (
 );
 
 -- ────────────────────────────────────────────────
--- 5. BẢNG NHÃN DÁN
---    Mỗi người dùng tạo riêng nhãn dán của mình,
---    tên nhãn tối đa 20 ký tự, không trùng trong cùng user
+-- BẢNG NHÃN DÁN
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS tags (
   id          SERIAL       PRIMARY KEY,
@@ -80,8 +63,7 @@ CREATE TABLE IF NOT EXISTS tags (
 );
 
 -- ────────────────────────────────────────────────
--- 6. BẢNG CÔNG VIỆC
---    Bảng trung tâm, lưu toàn bộ thông tin công việc
+-- BẢNG CÔNG VIỆC
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS tasks (
   id           SERIAL      PRIMARY KEY,
@@ -104,8 +86,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 
 -- ────────────────────────────────────────────────
--- 7. BẢNG GÁN (task_tags)
---    Quan hệ nhiều-nhiều giữa công việc và nhãn dán
+-- BẢNG GÁN (task_tags)
 -- ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS task_tags (
   task_id  INTEGER  NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
@@ -134,9 +115,7 @@ VALUES ('admin@nextask.vn', '-539701190')
 ON CONFLICT (email) DO NOTHING;
 `;
 
-// ════════════════════════════════════════════════
 //  getClient – kết nối DB và chạy schema
-// ════════════════════════════════════════════════
 async function getClient() {
   const client = new Client({
     connectionString: process.env.NETLIFY_DATABASE_URL,

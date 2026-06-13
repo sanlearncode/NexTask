@@ -1,7 +1,4 @@
-// ════════════════════════════════════════════════
-//  netlify/functions/api.js
-//  REST API cho NexTask – chạy trên Netlify Functions
-//
+
 //  Routes:
 //    Auth
 //      POST   /api/register          đăng ký người dùng
@@ -23,7 +20,6 @@
 //      GET    /api/admin/users       danh sách người dùng + thống kê
 //      PATCH  /api/admin/users/:id/lock   khóa / mở khóa
 //      GET    /api/admin/stats       thống kê toàn hệ thống
-// ════════════════════════════════════════════════
 
 const { getClient } = require("./db");
 
@@ -34,7 +30,7 @@ const HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, X-User-Id, X-Admin-Id",
 };
 
-// ── Helpers ──────────────────────────────────────
+// ── Helpers 
 const ok  = (body, code = 200)   => ({ statusCode: code,  headers: HEADERS, body: JSON.stringify(body) });
 const err = (msg, code = 400)    => ({ statusCode: code,  headers: HEADERS, body: JSON.stringify({ error: msg }) });
 const body = (event)             => JSON.parse(event.body || "{}");
@@ -50,7 +46,6 @@ function parsePath(event) {
   return parts;
 }
 
-// ════════════════════════════════════════════════
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: HEADERS, body: "" };
 
@@ -60,7 +55,7 @@ exports.handler = async (event) => {
     const parts  = parsePath(event);
     const [res, sub, subId] = parts;  // resource, sub-resource, sub-id
 
-    // ── ĐĂNG KÝ ────────────────────────────────
+    // ── ĐĂNG KÝ 
     // POST /api/register
     if (method === "POST" && res === "register") {
       const { username, email, password } = body(event);
@@ -80,7 +75,7 @@ exports.handler = async (event) => {
       return ok({ user: rows[0] }, 201);
     }
 
-    // ── ĐĂNG NHẬP ──────────────────────────────
+    // ── ĐĂNG NHẬP 
     // POST /api/login
     if (method === "POST" && res === "login") {
       const { email, password, role } = body(event);
@@ -114,7 +109,7 @@ exports.handler = async (event) => {
       return ok({ role: "user", user, sessionId: logRows[0].id });
     }
 
-    // ── ĐĂNG XUẤT ──────────────────────────────
+    // ── ĐĂNG XUẤT 
     // POST /api/logout   body: { sessionId }
     if (method === "POST" && res === "logout") {
       const { sessionId } = body(event);
@@ -130,10 +125,8 @@ exports.handler = async (event) => {
       return ok({ success: true });
     }
 
-    // ════════════════════════════════════════════
     //  TASKS
-    // ════════════════════════════════════════════
-
+   
     // GET /api/tasks?status=&sort=deadline&dir=asc&tag=
     if (method === "GET" && res === "tasks") {
       const uid = userId(event);
@@ -270,9 +263,7 @@ exports.handler = async (event) => {
       return ok({ deleted: true });
     }
 
-    // ════════════════════════════════════════════
     //  TAGS
-    // ════════════════════════════════════════════
 
     // GET /api/tags
     if (method === "GET" && res === "tags") {
@@ -315,9 +306,7 @@ exports.handler = async (event) => {
       return ok({ deleted: true });
     }
 
-    // ════════════════════════════════════════════
     //  ADMIN
-    // ════════════════════════════════════════════
 
     // GET /api/admin/users
     if (method === "GET" && res === "admin" && sub === "users") {
@@ -387,7 +376,7 @@ exports.handler = async (event) => {
       });
     }
 
-    // ── 405 Fallthrough ─────────────────────────
+    // ── 405 Fallthrough 
     return err("Không tìm thấy route", 404);
 
   } catch (e) {
