@@ -1,5 +1,3 @@
-
-
 const API = "/.netlify/functions/api";
 
 // ── STATE 
@@ -9,7 +7,7 @@ let activeTagFilter = null;
 let allTasks        = [];     // cache local sau mỗi lần fetch
 let allTags         = [];     // cache local
 
-// ── HASH 
+// ── HASH
 function hash(s) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
@@ -157,6 +155,7 @@ async function loadTasks() {
     updateTopStats();
     document.getElementById("taskCountLabel").textContent = `${allTasks.length} công việc`;
 
+    // Load tags cho sidebar
     await loadTags();
   } catch (e) {
     document.getElementById("tasksList").innerHTML =
@@ -164,7 +163,7 @@ async function loadTasks() {
   }
 }
 
-function filterTasks() { loadTasks(); }   // gọi lại API mỗi khi filter thay đổi
+function filterTasks() { loadTasks(); } 
 
 async function loadTags() {
   try {
@@ -175,7 +174,7 @@ async function loadTags() {
   } catch {}
 }
 
-// ── Render
+// ── Render 
 const STATUS_MAP = {
   todo:  { label:"Chưa làm", cls:"badge-status-todo"  },
   doing: { label:"Đang làm", cls:"badge-status-doing" },
@@ -271,7 +270,6 @@ async function deleteTask(id) {
   } catch (e) { showToast(e.message, "error"); }
 }
 
-// ── Top stat cards 
 function updateTopStats() {
   const today   = todayStr();
   const done    = allTasks.filter(t => t.status === "done").length;
@@ -430,7 +428,6 @@ async function deleteTag(id, name) {
 
 //  VIEW THỐNG KÊ
 async function loadStats() {
-  // Dùng lại cache allTasks nếu đã có, hoặc fetch mới
   if (!allTasks.length) {
     try { const d = await apiGet("tasks"); allTasks = d.tasks || []; } catch {}
   }
