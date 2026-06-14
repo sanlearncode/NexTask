@@ -1,23 +1,3 @@
-// ════════════════════════════════════════════════
-//  netlify/functions/api.js
-//  REST API cho NexTask – Netlify Functions
-//
-//  Routes:
-//    POST   /api/register
-//    POST   /api/login
-//    POST   /api/logout
-//    GET    /api/tasks
-//    POST   /api/tasks
-//    PUT    /api/tasks/:id
-//    DELETE /api/tasks/:id
-//    GET    /api/tags
-//    POST   /api/tags
-//    DELETE /api/tags/:id
-//    GET    /api/admin/users
-//    PATCH  /api/admin/users/:id/lock
-//    GET    /api/admin/stats
-// ════════════════════════════════════════════════
-
 const { getClient } = require("./db");
 
 const HEADERS = {
@@ -27,7 +7,7 @@ const HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, X-User-Id, X-Admin-Id",
 };
 
-// ── Helpers ──────────────────────────────────────
+// ── Helpers 
 const respond  = (data, code = 200) => ({ statusCode: code, headers: HEADERS, body: JSON.stringify(data) });
 const fail     = (msg,  code = 400) => ({ statusCode: code, headers: HEADERS, body: JSON.stringify({ error: msg }) });
 const getBody  = (event)            => { try { return JSON.parse(event.body || "{}"); } catch { return {}; } };
