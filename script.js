@@ -38,17 +38,32 @@ const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 let loginRole = "user";
 
 function goToLogin(tab) {
+  console.log("goToLogin called with tab:", tab);
+  
   const introScreen = document.getElementById("introScreen");
   const loginScreen = document.getElementById("loginScreen");
   
-  if (introScreen) introScreen.classList.remove("active");
-  if (loginScreen) loginScreen.classList.add("active");
+  console.log("introScreen element:", introScreen);
+  console.log("loginScreen element:", loginScreen);
+  
+  if (introScreen) {
+    console.log("Removing active from introScreen");
+    introScreen.classList.remove("active");
+  }
+  
+  if (loginScreen) {
+    console.log("Adding active to loginScreen");
+    loginScreen.classList.add("active");
+  }
   
   setRole("user");
   switchLoginTab(tab || "login");
+  
+  console.log("goToLogin completed");
 }
 
 function setRole(r) {
+  console.log("setRole called with:", r);
   loginRole = r;
   const roleUser = document.getElementById("roleUser");
   const roleAdmin = document.getElementById("roleAdmin");
@@ -62,6 +77,7 @@ function setRole(r) {
 }
 
 function switchLoginTab(t) {
+  console.log("switchLoginTab called with:", t);
   const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
   const tabLogin = document.getElementById("tabLogin");

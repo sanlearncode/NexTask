@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Button Click</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #6C47FF;
+      color: white;
+    }
+    button:hover {
+      background: #5a3dd1;
+    }
+    .log {
+      background: #f5f5f5;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #6C47FF;
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test NexTask Navigation</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Check if goToLogin function exists</h2>
+    <button onclick="testFunction()">Test goToLogin Function</button>
+    <div id="log1" class="log"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Check DOM elements</h2>
+    <button onclick="testDOM()">Test DOM Elements</button>
+    <div id="log2" class="log"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Simulate goToLogin('login')</h2>
+    <button onclick="testNavigation('login')">Test Navigation (Login)</button>
+    <button onclick="testNavigation('register')">Test Navigation (Register)</button>
+    <div id="log3" class="log"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Intro/Login Screen Status</h2>
+    <button onclick="checkStatus()">Check Current Status</button>
+    <div id="status" class="log"></div>
+  </div>
+
+  <script>
+    function log(elementId, text) {
+      const el = document.getElementById(elementId);
+      el.textContent += text + '\n';
+      console.log(text);
+    }
+
+    function testFunction() {
+      const el = document.getElementById('log1');
+      el.textContent = '';
+      
+      if (typeof goToLogin === 'function') {
+        log('log1', '✓ goToLogin function EXISTS');
+        log('log1', '✓ Function can be called');
+      } else {
+        log('log1', '✗ goToLogin function NOT FOUND');
+        log('log1', 'Available functions: ' + Object.keys(window).filter(k => typeof window[k] === 'function').slice(0, 10).join(', '));
+      }
+    }
+
+    function testDOM() {
+      const el = document.getElementById('log2');
+      el.textContent = '';
+      
+      const introScreen = document.getElementById('introScreen');
+      const loginScreen = document.getElementById('loginScreen');
+      
+      log('log2', 'introScreen element: ' + (introScreen ? '✓ FOUND' : '✗ NOT FOUND'));
+      if (introScreen) {
+        log('log2', '  - Classes: ' + introScreen.className);
+        log('log2', '  - Has "active" class: ' + introScreen.classList.contains('active'));
+      }
+      
+      log('log2', 'loginScreen element: ' + (loginScreen ? '✓ FOUND' : '✗ NOT FOUND'));
+      if (loginScreen) {
+        log('log2', '  - Classes: ' + loginScreen.className);
+        log('log2', '  - Has "active" class: ' + loginScreen.classList.contains('active'));
+      }
+    }
+
+    function testNavigation(tab) {
+      const el = document.getElementById('log3');
+      el.textContent = '';
+      
+      log('log3', `Calling goToLogin('${tab}')...`);
+      
+      try {
+        goToLogin(tab);
+        log('log3', '✓ Function executed without error');
+        
+        setTimeout(() => {
+          const introScreen = document.getElementById('introScreen');
+          const loginScreen = document.getElementById('loginScreen');
+          
+          log('log3', '\nAfter execution:');
+          log('log3', 'introScreen active: ' + (introScreen?.classList.contains('active') ? 'YES ✓' : 'NO ✗'));
+          log('log3', 'loginScreen active: ' + (loginScreen?.classList.contains('active') ? 'YES ✓' : 'NO ✗'));
+        }, 100);
+      } catch (err) {
+        log('log3', '✗ Error: ' + err.message);
+      }
+    }
+
+    function checkStatus() {
+      const el = document.getElementById('status');
+      el.textContent = '';
+      
+      const introScreen = document.getElementById('introScreen');
+      const loginScreen = document.getElementById('loginScreen');
+      const app = document.getElementById('app');
+      
+      log('status', 'Current Screen Status:');
+      log('status', '');
+      log('status', 'introScreen:');
+      log('status', '  - Display: ' + window.getComputedStyle(introScreen).display);
+      log('status', '  - Active class: ' + introScreen.classList.contains('active'));
+      log('status', '');
+      log('status', 'loginScreen:');
+      log('status', '  - Display: ' + window.getComputedStyle(loginScreen).display);
+      log('status', '  - Active class: ' + loginScreen.classList.contains('active'));
+      log('status', '');
+      log('status', 'app:');
+      log('status', '  - Display: ' + window.getComputedStyle(app).display);
+      log('status', '  - Hidden class: ' + app.classList.contains('hidden'));
+    }
+
+    // Initial check
+    console.log('Test page loaded');
+    log('log1', 'Page loaded. Press a test button to begin.');
+  </script>
+
+  <!-- Load the actual script -->
+  <script src="script.js"></script>
+</body>
+</html>

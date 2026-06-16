@@ -30,6 +30,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   display: flex;
+  pointer-events: auto;
 }
 
 .login-screen {
@@ -39,8 +40,12 @@ body {
   background: var(--sidebar-bg);
   align-items: center;
   justify-content: center;
+  pointer-events: auto;
 }
-.login-screen.active { display: flex; }
+.login-screen.active { 
+  display: flex;
+  pointer-events: auto;
+}
 
 .intro-screen {
   display: none;
@@ -48,8 +53,12 @@ body {
   width: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   flex-direction: column;
+  pointer-events: auto;
 }
-.intro-screen.active { display: flex; }
+.intro-screen.active { 
+  display: flex;
+  pointer-events: auto;
+}
 
 .intro-nav {
   display: flex;
@@ -58,6 +67,7 @@ body {
   padding: 20px 40px;
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  pointer-events: auto;
 }
 
 .intro-logo {
@@ -84,6 +94,7 @@ body {
 .intro-nav-buttons {
   display: flex;
   gap: 12px;
+  pointer-events: auto;
 }
 
 .intro-nav-buttons .btn {
@@ -91,6 +102,8 @@ body {
   font-size: 0.95rem;
   border-radius: 8px;
   z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .intro-nav-buttons .btn-ghost {
