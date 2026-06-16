@@ -594,3 +594,94 @@ textarea { resize: vertical; min-height: 80px; }
   .topbar { padding: 0 16px; gap: 8px; }
   .search-box { width: 160px; }
 }
+
+/* LANDING PAGE */
+
+#landingPage{
+  min-height:100vh;
+  background:linear-gradient(135deg,#6C47FF,#8F73FF);
+  color:white;
+}
+
+.landing-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px 60px;
+}
+
+.landing-logo h2{
+  font-size:2rem;
+  font-weight:800;
+}
+
+.landing-logo span{
+  color:#FFD166;
+}
+
+.landing-actions{
+  display:flex;
+  gap:12px;
+}
+
+.hero{
+  min-height:70vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
+}
+
+.hero-content{
+  max-width:800px;
+}
+
+.hero h1{
+  font-size:3.5rem;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:1.2rem;
+  opacity:.9;
+  margin-bottom:30px;
+}
+
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+}
+
+.features{
+  padding:60px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.feature-card{
+  background:white;
+  color:#1A1D2E;
+  border-radius:16px;
+  padding:24px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.about{
+  text-align:center;
+  padding:80px 40px;
+  max-width:900px;
+  margin:auto;
+}
+
+.about h2{
+  margin-bottom:20px;
+}
+
+.about p{
+  margin-bottom:12px;
+  line-height:1.7;
+}

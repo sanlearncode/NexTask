@@ -574,3 +574,13 @@ function showToast(msg, type = "") {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") { closeTaskModal(); closeTagModal(); }
 });
+
+function openLogin(tab = "login") {
+
+  document.getElementById("landingPage").style.display = "none";
+
+  document.getElementById("loginScreen")
+          .classList.add("active");
+
+  switchLoginTab(tab);
+}
