@@ -75,6 +75,12 @@ body {
   color: #FFD700;
 }
 
+.logo-img {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
 .intro-nav-buttons {
   display: flex;
   gap: 12px;

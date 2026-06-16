@@ -37,6 +37,13 @@ const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 //  AUTH
 let loginRole = "user";
 
+function goToLogin(tab) {
+  document.getElementById("introScreen").classList.remove("active");
+  document.getElementById("loginScreen").classList.add("active");
+  setRole("user");
+  switchLoginTab(tab);
+}
+
 function showLoginTab(tab) {
   document.getElementById("introScreen").classList.remove("active");
   document.getElementById("loginScreen").classList.add("active");
