@@ -86,6 +86,37 @@ body {
   gap: 12px;
 }
 
+.intro-nav-buttons .btn {
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.intro-nav-buttons .btn-ghost {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+}
+
+.intro-nav-buttons .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+.intro-nav-buttons .btn-primary {
+  background: #fff;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.intro-nav-buttons .btn-primary:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
 .intro-content {
   flex: 1;
   display: flex;

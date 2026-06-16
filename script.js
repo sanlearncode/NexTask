@@ -38,32 +38,39 @@ const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 let loginRole = "user";
 
 function goToLogin(tab) {
-  document.getElementById("introScreen").classList.remove("active");
-  document.getElementById("loginScreen").classList.add("active");
+  const introScreen = document.getElementById("introScreen");
+  const loginScreen = document.getElementById("loginScreen");
+  
+  if (introScreen) introScreen.classList.remove("active");
+  if (loginScreen) loginScreen.classList.add("active");
+  
   setRole("user");
-  switchLoginTab(tab);
-}
-
-function showLoginTab(tab) {
-  document.getElementById("introScreen").classList.remove("active");
-  document.getElementById("loginScreen").classList.add("active");
-  switchLoginTab(tab);
-  setRole("user");
+  switchLoginTab(tab || "login");
 }
 
 function setRole(r) {
   loginRole = r;
-  document.getElementById("roleUser").classList.toggle("active",  r === "user");
-  document.getElementById("roleAdmin").classList.toggle("active", r === "admin");
-  document.getElementById("tabRegister").style.display = r === "admin" ? "none" : "";
+  const roleUser = document.getElementById("roleUser");
+  const roleAdmin = document.getElementById("roleAdmin");
+  const tabRegister = document.getElementById("tabRegister");
+  
+  if (roleUser) roleUser.classList.toggle("active", r === "user");
+  if (roleAdmin) roleAdmin.classList.toggle("active", r === "admin");
+  if (tabRegister) tabRegister.style.display = r === "admin" ? "none" : "";
+  
   if (r === "admin") switchLoginTab("login");
 }
 
 function switchLoginTab(t) {
-  document.getElementById("loginForm").style.display    = t === "login"    ? "block" : "none";
-  document.getElementById("registerForm").style.display = t === "register" ? "block" : "none";
-  document.getElementById("tabLogin").classList.toggle("active",    t === "login");
-  document.getElementById("tabRegister").classList.toggle("active", t === "register");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+  
+  if (loginForm) loginForm.style.display = t === "login" ? "block" : "none";
+  if (registerForm) registerForm.style.display = t === "register" ? "block" : "none";
+  if (tabLogin) tabLogin.classList.toggle("active", t === "login");
+  if (tabRegister) tabRegister.classList.toggle("active", t === "register");
 }
 
 async function doLogin() {
