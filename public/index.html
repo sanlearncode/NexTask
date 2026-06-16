@@ -387,6 +387,28 @@
 <!-- TOAST -->
 <div class="toast-wrap" id="toastWrap"></div>
 
+<!-- CHATBOT WIDGET -->
+<div class="chatbot-widget" id="chatbotWidget" style="display: none;">
+  <div class="chatbot-header">
+    <div class="chatbot-title">🤖 NexTask AI</div>
+    <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages"></div>
+  <div class="chatbot-input-area">
+    <input
+      type="text"
+      id="chatbotInput"
+      class="chatbot-input"
+      placeholder="Hỏi gì đó..."
+      onkeydown="if(event.key==='Enter') sendChatMessage()"
+    />
+    <button class="chatbot-send" onclick="sendChatMessage()">→</button>
+  </div>
+</div>
+
+<!-- CHATBOT TOGGLE BUTTON -->
+<button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()" title="Mở trợ lý AI" style="display: none;"></button>
+
 <script src="script.js"></script>
 </body>
 </html>

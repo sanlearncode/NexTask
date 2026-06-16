@@ -304,6 +304,135 @@ exports.handler = async (event) => {
       return respond({ deleted: true });
     }
 
+    //  CHATBOT
+
+    // POST /api/chatbot
+    if (method === "POST" && seg0 === "chatbot") {
+      const uid = getUserId(event);
+      if (!uid) return fail("Yêu cầu xác thực", 401);
+
+      const { message, tasks = [] } = getBody(event);
+      if (!message?.trim()) return fail("Tin nhắn trống", 400);
+
+      const userMessage = message.toLowerCase().trim();
+      
+      // Phân tích task từ client
+      const today = new Date().toISOString().split('T')[0];
+      const todayTasks = tasks.filter(t => 
+        t.deadline === today && t.status !== "done"
+      );
+      const overdueTasks = tasks.filter(t => 
+        t.deadline && t.deadline < today && t.status !== "done"
+      );
+      const upcomingTasks = tasks.filter(t => 
+        t.deadline && t.deadline > today && t.status !== "done"
+      );
+      const urgentTasks = tasks.filter(t => 
+        t.urgency === 3 && t.status !== "done"
+      );
+      const importantTasks = tasks.filter(t => 
+        t.importance === 3 && t.status !== "done"
+      );
+
+      let reply = "";
+
+      // Xử lý các loại câu hỏi phổ biến
+      if (userMessage.includes("hôm nay") || userMessage.includes("công việc hôm nay")) {
+        if (todayTasks.length === 0) {
+          reply = "Bạn không có công việc nào hôm nay! Hãy thư giãn. 😊";
+        } else {
+          reply = `Bạn có ${todayTasks.length} công việc hôm nay:\n`;
+          todayTasks.slice(0, 5).forEach((t, i) => {
+            reply += `${i + 1}. ${t.title} (${t.status === "doing" ? "Đang làm" : "Chưa làm"})\n`;
+          });
+          if (todayTasks.length > 5) {
+            reply += `... và ${todayTasks.length - 5} công việc khác`;
+          }
+        }
+      } else if (userMessage.includes("quá hạn") || userMessage.includes("trễ") || userMessage.includes("hạn chót")) {
+        if (overdueTasks.length === 0) {
+          reply = "Tốt lắm! Bạn không có công việc nào quá hạn. 🎉";
+        } else {
+          reply = `⚠️ Bạn có ${overdueTasks.length} công việc đã quá hạn:\n`;
+          overdueTasks.slice(0, 3).forEach((t, i) => {
+            reply += `${i + 1}. ${t.title} (hạn: ${t.deadline})\n`;
+          });
+          reply += "\nHãy ưu tiên hoàn thành những công việc này!";
+        }
+      } else if (userMessage.includes("khẩn cấp") || userMessage.includes("gấp")) {
+        if (urgentTasks.length === 0) {
+          reply = "Không có công việc khẩn cấp nào. Bạn có thể sắp xếp thời gian thoải mái! 🌟";
+        } else {
+          reply = `⏰ Bạn có ${urgentTasks.length} công việc khẩn cấp:\n`;
+          urgentTasks.slice(0, 3).forEach((t, i) => {
+            reply += `${i + 1}. ${t.title}\n`;
+          });
+        }
+      } else if (userMessage.includes("quan trọng") || userMessage.includes("ưu tiên")) {
+        if (importantTasks.length === 0) {
+          reply = "Không có công việc quan trọng nào. Tuyệt vời! ✨";
+        } else {
+          reply = `⭐ Bạn có ${importantTasks.length} công việc quan trọng:\n`;
+          importantTasks.slice(0, 3).forEach((t, i) => {
+            reply += `${i + 1}. ${t.title}\n`;
+          });
+        }
+      } else if (userMessage.includes("sắp tới") || userMessage.includes("tuần tới")) {
+        if (upcomingTasks.length === 0) {
+          reply = "Bạn không có công việc sắp tới. Thời gian của bạn khá trống! 🎯";
+        } else {
+          reply = `📅 Bạn có ${upcomingTasks.length} công việc sắp tới:\n`;
+          upcomingTasks.slice(0, 4).forEach((t, i) => {
+            reply += `${i + 1}. ${t.title} (${t.deadline})\n`;
+          });
+        }
+      } else if (userMessage.includes("tổng số") || userMessage.includes("bao nhiêu công việc")) {
+        reply = `Bạn có tổng cộng ${tasks.length} công việc:\n`;
+        reply += `• Chưa làm: ${tasks.filter(t => t.status === "todo").length}\n`;
+        reply += `• Đang làm: ${tasks.filter(t => t.status === "doing").length}\n`;
+        reply += `• Đã làm: ${tasks.filter(t => t.status === "done").length}`;
+      } else if (userMessage.includes("gợi ý") || userMessage.includes("nên làm gì")) {
+        if (todayTasks.length > 0) {
+          reply = `Tôi gợi ý bạn nên bắt đầu với:\n"${todayTasks[0].title}"\n\nHãy tập trung hoàn thành công việc này trước! 💪`;
+        } else if (urgentTasks.length > 0) {
+          reply = `Tôi gợi ý bạn nên ưu tiên công việc khẩn cấp:\n"${urgentTasks[0].title}"\n\nĐây là việc cần được xử lý ngay! ⏰`;
+        } else if (importantTasks.length > 0) {
+          reply = `Tôi gợi ý bạn nên làm công việc quan trọng:\n"${importantTasks[0].title}"\n\nĐây sẽ giúp bạn đạt được mục tiêu! 🎯`;
+        } else if (upcomingTasks.length > 0) {
+          reply = `Bạn vẫn có việc cần làm:\n"${upcomingTasks[0].title}"\n\nHãy bắt đầu chuẩn bị từ bây giờ! 📝`;
+        } else {
+          reply = "Tuyệt vời! Bạn đã hoàn thành tất cả công việc. Hãy tạo những công việc mới và tiếp tục phát triển bản thân! 🚀";
+        }
+      } else if (userMessage.includes("hello") || userMessage.includes("xin chào") || userMessage.includes("hi")) {
+        const hour = new Date().getHours();
+        let greeting = "Chào buổi sáng! ☀️";
+        if (hour >= 12 && hour < 17) greeting = "Chào buổi chiều! 🌤️";
+        if (hour >= 17 && hour < 21) greeting = "Chào buổi tối! 🌙";
+        if (hour >= 21 || hour < 6) greeting = "Bạn còn thức đấy à? 🌙";
+        
+        reply = `${greeting}\n\nTôi là trợ lý AI của NexTask. Tôi có thể giúp bạn:\n`;
+        reply += `• Xem công việc hôm nay\n`;
+        reply += `• Kiểm tra công việc quá hạn\n`;
+        reply += `• Xem danh sách ưu tiên\n`;
+        reply += `• Nhận gợi ý công việc cần làm\n\n`;
+        reply += `Hỏi tôi bất cứ điều gì về công việc của bạn! 😊`;
+      } else if (userMessage.includes("thank") || userMessage.includes("cảm ơn")) {
+        reply = "Vui lòng! Tôi luôn sẵn sàng giúp bạn. Hãy tiếp tục hoàn thành công việc của bạn nhé! 💪";
+      } else {
+        // Phản hồi mặc định cho các câu hỏi không được nhận dạng
+        reply = `Tôi hiểu bạn muốn hỏi về: "${message}"\n\n`;
+        reply += `Dưới đây là một số gợi ý:\n`;
+        reply += `• "Công việc hôm nay" - Xem danh sách việc hôm nay\n`;
+        reply += `• "Công việc quá hạn" - Kiểm tra việc đã hết hạn\n`;
+        reply += `• "Gợi ý" - Nhận gợi ý công việc ưu tiên\n`;
+        reply += `• "Khẩn cấp" - Xem công việc cần làm gấp\n`;
+        reply += `• "Tổng số" - Xem thống kê công việc\n\n`;
+        reply += `Hoặc hãy nói với tôi bất cứ điều gì bạn cần! 😊`;
+      }
+
+      return respond({ reply });
+    }
+
     //  ADMIN
 
     // GET /api/admin/users

@@ -105,6 +105,7 @@ async function logout() {
   document.getElementById("app").classList.add("hidden");
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPass").value  = "";
+  hideChatbotToggle();
 }
 
 //  KHỞI TẠO APP
@@ -120,6 +121,9 @@ function initApp() {
 
   activeTagFilter = null;
   showView("tasks");
+  
+  // Khởi tạo chatbot
+  showChatbotToggle();
 }
 
 //  VIEWS
@@ -574,3 +578,150 @@ function showToast(msg, type = "") {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") { closeTaskModal(); closeTagModal(); }
 });
+
+// ════════════════════════════════════════════════
+// CHATBOT LOGIC
+// ════════════════════════════════════════════════
+
+let chatbotOpen = false;
+
+function toggleChatbot() {
+  chatbotOpen = !chatbotOpen;
+  const widget = document.getElementById("chatbotWidget");
+  const toggle = document.getElementById("chatbotToggle");
+  
+  if (chatbotOpen) {
+    widget.style.display = "flex";
+    toggle.style.display = "none";
+    document.getElementById("chatbotInput").focus();
+    // Gợi ý công việc hôm nay khi mở
+    if (document.getElementById("chatbotMessages").children.length === 0) {
+      suggestDailyTasks();
+    }
+  } else {
+    widget.style.display = "none";
+    toggle.style.display = "flex";
+  }
+}
+
+function showChatbotToggle() {
+  if (currentUser && currentUser.role === "user") {
+    document.getElementById("chatbotToggle").style.display = "flex";
+    document.getElementById("chatbotWidget").style.display = "none";
+    chatbotOpen = false;
+  }
+}
+
+function hideChatbotToggle() {
+  document.getElementById("chatbotToggle").style.display = "none";
+  document.getElementById("chatbotWidget").style.display = "none";
+  chatbotOpen = false;
+}
+
+function addChatbotMessage(text, isBot = true) {
+  const messagesEl = document.getElementById("chatbotMessages");
+  const msgDiv = document.createElement("div");
+  msgDiv.className = isBot ? "chatbot-message bot" : "chatbot-message user";
+  
+  if (isBot) {
+    msgDiv.innerHTML = `
+      <div style="display: flex; gap: 8px; width: 100%;">
+        <div class="chatbot-message-avatar">🤖</div>
+        <div class="chatbot-message-content">${esc(text)}</div>
+      </div>
+    `;
+  } else {
+    msgDiv.innerHTML = `<div class="chatbot-message-content">${esc(text)}</div>`;
+  }
+  
+  messagesEl.appendChild(msgDiv);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addChatbotLoadingIndicator() {
+  const messagesEl = document.getElementById("chatbotMessages");
+  const msgDiv = document.createElement("div");
+  msgDiv.className = "chatbot-message bot";
+  msgDiv.id = "chatbot-loading-indicator";
+  msgDiv.innerHTML = `
+    <div style="display: flex; gap: 8px; width: 100%;">
+      <div class="chatbot-message-avatar">🤖</div>
+      <div class="chatbot-message-content chatbot-loading">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  `;
+  
+  messagesEl.appendChild(msgDiv);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeChatbotLoadingIndicator() {
+  const loadingEl = document.getElementById("chatbot-loading-indicator");
+  if (loadingEl) loadingEl.remove();
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById("chatbotInput");
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  // Thêm tin nhắn người dùng
+  addChatbotMessage(message, false);
+  input.value = "";
+  
+  // Hiển thị loading indicator
+  addChatbotLoadingIndicator();
+  
+  try {
+    const response = await apiPost("chatbot", {
+      message: message,
+      userId: currentUser.id,
+      tasks: allTasks,
+    });
+    
+    removeChatbotLoadingIndicator();
+    
+    if (response.reply) {
+      addChatbotMessage(response.reply, true);
+    } else {
+      addChatbotMessage("Xin lỗi, không thể xử lý yêu cầu của bạn.", true);
+    }
+  } catch (e) {
+    removeChatbotLoadingIndicator();
+    console.error("Chatbot error:", e);
+    addChatbotMessage("Xin lỗi, có lỗi xảy ra. Vui lòng thử lại.", true);
+  }
+}
+
+async function suggestDailyTasks() {
+  const today = todayStr();
+  
+  // Tìm công việc hôm nay
+  const todayTasks = allTasks.filter(t => t.deadline === today && t.status !== "done");
+  const upcomingTasks = allTasks.filter(t => {
+    const dl = t.deadline ? t.deadline.slice(0, 10) : "";
+    return dl > today && dl <= addDays(today, 3) && t.status !== "done";
+  });
+  
+  let suggestion = "";
+  
+  if (todayTasks.length === 0 && upcomingTasks.length === 0) {
+    suggestion = "Bạn không có công việc nào hôm nay hoặc trong 3 ngày tới! Hãy tận hưởng ngày của bạn. 😊";
+  } else {
+    suggestion = "Hôm nay bạn có " + todayTasks.length + " công việc cần làm. ";
+    if (upcomingTasks.length > 0) {
+      suggestion += "Và còn " + upcomingTasks.length + " công việc sắp tới.\\n\\n";
+    }
+    
+    if (todayTasks.length > 0) {
+      suggestion += "Công việc hôm nay:\\n";
+      todayTasks.slice(0, 3).forEach(t => {
+        suggestion += "• " + t.title + "\\n";
+      });
+    }
+  }
+  
+  addChatbotMessage("Xin chào! " + suggestion);
+}
