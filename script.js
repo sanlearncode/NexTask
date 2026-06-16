@@ -37,6 +37,13 @@ const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 //  AUTH
 let loginRole = "user";
 
+function showLoginTab(tab) {
+  document.getElementById("introScreen").classList.remove("active");
+  document.getElementById("loginScreen").classList.add("active");
+  switchLoginTab(tab);
+  setRole("user");
+}
+
 function setRole(r) {
   loginRole = r;
   document.getElementById("roleUser").classList.toggle("active",  r === "user");
@@ -101,7 +108,8 @@ async function logout() {
   currentUser     = null;
   activeTagFilter = null;
   allTasks = []; allTags = [];
-  document.getElementById("loginScreen").classList.add("active");
+  document.getElementById("introScreen").classList.add("active");
+  document.getElementById("loginScreen").classList.remove("active");
   document.getElementById("app").classList.add("hidden");
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPass").value  = "";
