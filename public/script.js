@@ -111,8 +111,10 @@ async function logout() {
   currentUser     = null;
   activeTagFilter = null;
   allTasks = []; allTags = [];
-  document.getElementById("loginScreen").classList.add("active");
+  document.getElementById("loginScreen").classList.remove("active");
   document.getElementById("app").classList.add("hidden");
+  document.getElementById("landingPage").style.display = "block";
+  
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPass").value  = "";
 }
@@ -593,4 +595,12 @@ function openLogin(tab = "login") {
           .classList.add("active");
 
   switchLoginTab(tab);
+}
+
+function backToLanding(){
+
+    document.getElementById("landingPage").style.display = "block";
+
+    document.getElementById("loginScreen")
+            .classList.remove("active");
 }
