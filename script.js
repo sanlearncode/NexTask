@@ -46,10 +46,20 @@ function setRole(r) {
 }
 
 function switchLoginTab(t) {
-  document.getElementById("loginForm").style.display    = t === "login"    ? "block" : "none";
-  document.getElementById("registerForm").style.display = t === "register" ? "block" : "none";
-  document.getElementById("tabLogin").classList.toggle("active",    t === "login");
-  document.getElementById("tabRegister").classList.toggle("active", t === "register");
+  document.getElementById("loginForm").style.display =
+    t === "login" ? "block" : "none";
+
+  document.getElementById("registerForm").style.display =
+    t === "register" ? "block" : "none";
+
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+
+  if (tabLogin)
+    tabLogin.classList.toggle("active", t === "login");
+
+  if (tabRegister)
+    tabRegister.classList.toggle("active", t === "register");
 }
 
 async function doLogin() {

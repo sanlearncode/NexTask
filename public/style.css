@@ -1,3 +1,11 @@
+html,
+body{
+  margin:0;
+  padding:0;
+  width:100%;
+  overflow-x:hidden;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -598,7 +606,11 @@ textarea { resize: vertical; min-height: 80px; }
 /* LANDING PAGE */
 
 #landingPage{
+  position:relative;
+  width:100vw;
   min-height:100vh;
+  margin:0;
+  padding:0;
   background:linear-gradient(135deg,#6C47FF,#8F73FF);
   color:white;
 }
