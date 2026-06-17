@@ -818,16 +818,16 @@ textarea { resize: vertical; min-height: 80px; }
   margin-bottom:24px;
 }
 
-.calendar-grid{
-  background:white;
-  border-radius:16px;
-  padding:20px;
+.calendar-weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin-bottom:10px;
 }
 
-.calendar-day-name{
-  font-weight:600;
+.calendar-weekdays div{
   text-align:center;
-  padding:12px;
+  font-weight:700;
+  padding:10px;
 }
 
 .calendar-days{
