@@ -621,8 +621,8 @@ textarea { resize: vertical; min-height: 80px; }
   padding:0;
   background:
     linear-gradient(
-      rgba(26,29,46,0.75),
-      rgba(76,56,255,0.75)
+      rgba(26,29,46,1),
+      rgba(76,56,255,1)
     ),
     ;
 
