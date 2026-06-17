@@ -46,10 +46,20 @@ function setRole(r) {
 }
 
 function switchLoginTab(t) {
-  document.getElementById("loginForm").style.display    = t === "login"    ? "block" : "none";
-  document.getElementById("registerForm").style.display = t === "register" ? "block" : "none";
-  document.getElementById("tabLogin").classList.toggle("active",    t === "login");
-  document.getElementById("tabRegister").classList.toggle("active", t === "register");
+  document.getElementById("loginForm").style.display =
+    t === "login" ? "block" : "none";
+
+  document.getElementById("registerForm").style.display =
+    t === "register" ? "block" : "none";
+
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+
+  if (tabLogin)
+    tabLogin.classList.toggle("active", t === "login");
+
+  if (tabRegister)
+    tabRegister.classList.toggle("active", t === "register");
 }
 
 async function doLogin() {
@@ -101,8 +111,10 @@ async function logout() {
   currentUser     = null;
   activeTagFilter = null;
   allTasks = []; allTags = [];
-  document.getElementById("loginScreen").classList.add("active");
+  document.getElementById("loginScreen").classList.remove("active");
   document.getElementById("app").classList.add("hidden");
+  document.getElementById("landingPage").style.display = "block";
+  
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPass").value  = "";
 }
@@ -574,3 +586,21 @@ function showToast(msg, type = "") {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") { closeTaskModal(); closeTagModal(); }
 });
+
+function openLogin(tab = "login") {
+
+  document.getElementById("landingPage").style.display = "none";
+
+  document.getElementById("loginScreen")
+          .classList.add("active");
+
+  switchLoginTab(tab);
+}
+
+function backToLanding(){
+
+    document.getElementById("landingPage").style.display = "block";
+
+    document.getElementById("loginScreen")
+            .classList.remove("active");
+}

@@ -8,10 +8,99 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<!-- LANDING PAGE -->
+<div id="landingPage">
+
+  <header class="landing-header">
+    <div class="landing-logo">
+      <img src="logo.svg" alt="NexTask Logo">
+    <span>NexTask</span>
+    </div>
+
+    <div class="landing-actions">
+      <button class="btn btn-ghost"
+              onclick="openLogin('login')">
+        Đăng nhập
+      </button>
+
+      <button class="btn btn-primary"
+              onclick="openLogin('register')">
+        Đăng ký
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Hệ Thống Quản Lý Công Việc</h1>
+
+      <p>
+        Theo dõi công việc, quản lý deadline,
+        nâng cao hiệu suất học tập và làm việc
+        với NexTask.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="btn btn-primary"
+                onclick="openLogin('register')">
+          Bắt đầu ngay
+        </button>
+
+        <button class="btn btn-ghost"
+                onclick="document.getElementById('features')
+                .scrollIntoView({behavior:'smooth'})">
+          Tìm hiểu thêm
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <div class="feature-card">
+      <h3>📋 Quản lý công việc</h3>
+      <p>Tạo, chỉnh sửa và theo dõi nhiệm vụ dễ dàng.</p>
+    </div>
+
+    <div class="feature-card">
+      <h3>📅 Theo dõi Deadline</h3>
+      <p>Không bỏ lỡ các công việc quan trọng.</p>
+    </div>
+
+    <div class="feature-card">
+      <h3>📊 Thống kê tiến độ</h3>
+      <p>Đánh giá hiệu suất làm việc trực quan.</p>
+    </div>
+
+    <div class="feature-card">
+      <h3>🏷️ Nhãn công việc</h3>
+      <p>Phân loại và tìm kiếm nhanh chóng.</p>
+    </div>
+  </section>
+
+  <section class="about">
+    <h2>Về dự án NexTask</h2>
+
+    <p>
+      NexTask là website quản lý công việc được phát triển
+      nhằm hỗ trợ người dùng tổ chức và theo dõi công việc
+      hiệu quả hơn trong học tập và làm việc.
+    </p>
+
+    <p>
+      Được phát triển bởi
+      <strong>Hà Thái San</strong> và
+      <strong>Giang Thành Vinh</strong>.
+    </p>
+  </section>
+
+</div>
 
 <!-- MÀN HÌNH ĐĂNG NHẬP -->
-<div class="login-screen active" id="loginScreen">
+<div class="login-screen" id="loginScreen">
   <div class="login-card">
+    <button class="back-btn" onclick="backToLanding()">
+    ← Quay lại
+  </button>
     <div class="login-logo">
       <h1>Nex<span>Task</span></h1>
       <p>Quản lý công việc thông minh</p>
@@ -384,6 +473,6 @@
 <!-- TOAST -->
 <div class="toast-wrap" id="toastWrap"></div>
 
-<script src="script.js"></script>
+<script src="../script.js"></script>
 </body>
 </html>
