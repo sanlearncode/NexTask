@@ -133,6 +133,12 @@ body {
   align-items: center;
   gap: 10px;
 }
+.sidebar-logo-img {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
 .sidebar-logo-text {
   font-size: 1.2rem;
   font-weight: 700;
