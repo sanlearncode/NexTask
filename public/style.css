@@ -624,11 +624,7 @@ textarea { resize: vertical; min-height: 80px; }
       rgba(26,29,46,0.75),
       rgba(76,56,255,0.75)
     ),
-    url("background.jpg");
-
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+    ;
 
   color:white;
 }
