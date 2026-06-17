@@ -34,6 +34,16 @@ const apiPut    = (path, body)  => apiFetch(path, { method: "PUT",    body: JSON
 const apiPatch  = (path, body)  => apiFetch(path, { method: "PATCH",  body: JSON.stringify(body) });
 const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 
+async function askAI(message){
+
+  const data = await apiPost(
+    "chatbot",
+    { message }
+  );
+
+  return data.reply;
+}
+
 //  AUTH
 let loginRole = "user";
 
@@ -603,4 +613,80 @@ function backToLanding(){
 
     document.getElementById("loginScreen")
             .classList.remove("active");
+}
+
+function toggleChat(){
+
+  const chat =
+    document.getElementById("aiChatbot");
+
+  chat.style.display =
+    chat.style.display === "flex"
+      ? "none"
+      : "flex";
+}
+
+function addMessage(text,type){
+
+  const messages =
+    document.getElementById("chatMessages");
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    type === "user"
+      ? "chat-user"
+      : "chat-ai";
+
+  div.innerHTML =
+    `<div class="chat-bubble">
+      ${esc(text)}
+    </div>`;
+
+  messages.appendChild(div);
+
+  messages.scrollTop =
+    messages.scrollHeight;
+}
+
+async function sendAIMessage(){
+
+  const input =
+    document.getElementById("chatInput");
+
+  const message =
+    input.value.trim();
+
+  if(!message) return;
+
+  addMessage(message,"user");
+
+  input.value = "";
+
+  addMessage("Đang suy nghĩ...","ai");
+
+  try{
+
+    const reply =
+      await askAI(message);
+
+    const msgs =
+      document.querySelectorAll(".chat-ai");
+
+    msgs[msgs.length-1].innerHTML =
+      `<div class="chat-bubble">
+        ${reply}
+      </div>`;
+
+  }catch(err){
+
+    const msgs =
+      document.querySelectorAll(".chat-ai");
+
+    msgs[msgs.length-1].innerHTML =
+      `<div class="chat-bubble">
+        Lỗi: ${err.message}
+      </div>`;
+  }
 }

@@ -474,5 +474,30 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script src="../script.js"></script>
+<div id="aiChatbot">
+
+  <div id="chatHeader">
+    🤖 NexTask AI
+  </div>
+
+  <div id="chatMessages"></div>
+
+  <div id="chatInputArea">
+    <input
+      id="chatInput"
+      placeholder="Hỏi AI..."
+      onkeypress="if(event.key==='Enter')sendAIMessage()"
+    >
+
+    <button onclick="sendAIMessage()">
+      Gửi
+    </button>
+  </div>
+
+</div>
+
+<button id="chatToggle" onclick="toggleChat()">
+  🤖
+</button>
 </body>
 </html>
