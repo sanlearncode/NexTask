@@ -146,14 +146,15 @@ function initApp() {
 
 //  VIEWS
 function showView(v) {
-  ["tasks","stats","admin"].forEach(x => {
+  ["tasks","stats","calendar","admin"].forEach(x => {
     document.getElementById("view-" + x).style.display = x === v ? "block" : "none";
     document.getElementById("nav-"  + x)?.classList.toggle("active", x === v);
   });
-  const titles = { tasks:"Công việc của tôi", stats:"Thống kê & Phân tích", admin:"Quản lý tài khoản" };
+  const titles = { tasks:"Công việc của tôi", stats:"Thống kê & Phân tích", calendar:"Lịch công việc", admin:"Quản lý tài khoản" };
   document.getElementById("pageTitle").textContent = titles[v];
   if (v === "tasks") loadTasks();
   if (v === "stats") loadStats();
+  if (v === "calendar") loadCalendar();
   if (v === "admin") loadAdmin();
 }
 
@@ -689,4 +690,74 @@ async function sendAIMessage(){
         Lỗi: ${err.message}
       </div>`;
   }
+}
+
+let calendarDate = new Date();
+
+function changeMonth(step){
+
+  calendarDate.setMonth(
+    calendarDate.getMonth() + step
+  );
+
+  loadCalendar();
+}
+
+function loadCalendar(){
+
+  const year =
+    calendarDate.getFullYear();
+
+  const month =
+    calendarDate.getMonth();
+
+  document.getElementById(
+    "calendarMonth"
+  ).textContent =
+    `Tháng ${month+1} / ${year}`;
+
+  const firstDay =
+    new Date(year,month,1).getDay();
+
+  const daysInMonth =
+    new Date(year,month+1,0).getDate();
+
+  const calendar =
+    document.getElementById("calendarDays");
+
+  let html = "";
+
+  for(let i=0;i<firstDay;i++){
+    html += `<div class="calendar-cell empty"></div>`;
+  }
+
+  for(let day=1;day<=daysInMonth;day++){
+
+    const dateStr =
+      `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+    const tasks =
+      allTasks.filter(
+        t => t.deadline &&
+        t.deadline.slice(0,10) === dateStr
+      );
+
+    html += `
+      <div class="calendar-cell">
+
+        <div class="calendar-date">
+          ${day}
+        </div>
+
+        ${tasks.map(t=>`
+          <div class="calendar-task">
+            ${esc(t.title)}
+          </div>
+        `).join("")}
+
+      </div>
+    `;
+  }
+
+  calendar.innerHTML = html;
 }
