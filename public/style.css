@@ -623,8 +623,9 @@ textarea { resize: vertical; min-height: 80px; }
     linear-gradient(
       rgba(26,29,46,1),
       rgba(76,56,255,1)
-    ),
-    ;
+    );
+
+  color:white;
 }
 
 .landing-header{
