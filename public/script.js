@@ -175,7 +175,10 @@ async function loadTasks() {
     const data = await apiGet(url);
     allTasks = data.tasks || [];
     renderTaskList(allTasks);
+
     updateTopStats();
+
+    loadNotifications();
     document.getElementById("taskCountLabel").textContent = `${allTasks.length} công việc`;
 
     // Load tags cho sidebar
@@ -760,4 +763,89 @@ function loadCalendar(){
   }
 
   calendar.innerHTML = html;
+}
+
+let notifications = [];
+
+function toggleNotifications(){
+
+  const panel =
+    document.getElementById(
+      "notificationPanel"
+    );
+
+  panel.style.display =
+    panel.style.display === "block"
+      ? "none"
+      : "block";
+}
+
+function loadNotifications(){
+
+  const today =
+    todayStr();
+
+  notifications = [];
+
+  allTasks.forEach(task => {
+
+    if(!task.deadline)
+      return;
+
+    const deadline =
+      task.deadline.slice(0,10);
+
+    if(
+      deadline < today &&
+      task.status !== "done"
+    ){
+      notifications.push({
+        type:"overdue",
+        text:`⚠️ ${task.title} đã quá hạn`
+      });
+    }
+
+    else if(
+      deadline === today &&
+      task.status !== "done"
+    ){
+      notifications.push({
+        type:"soon",
+        text:`📅 Hôm nay: ${task.title}`
+      });
+    }
+
+  });
+
+  renderNotifications();
+}
+
+function renderNotifications(){
+
+  document.getElementById(
+    "notificationCount"
+  ).textContent =
+    notifications.length;
+
+  const list =
+    document.getElementById(
+      "notificationList"
+    );
+
+  if(!notifications.length){
+
+    list.innerHTML =
+      `<div class="notification-item">
+        Không có thông báo
+      </div>`;
+
+    return;
+  }
+
+  list.innerHTML =
+    notifications.map(n => `
+      <div class="notification-item ${n.type}">
+        ${n.text}
+      </div>
+    `).join("");
 }

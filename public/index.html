@@ -237,6 +237,12 @@
         <input type="text" id="searchInput"
                placeholder="Tìm kiếm công việc..." oninput="filterTasks()" />
       </div>
+
+      <button class="notification-btn" onclick="toggleNotifications()">
+        🔔
+        <span id="notificationBadge">0</span>
+      </button>
+
       <button class="btn btn-primary" onclick="openTaskModal()" id="addTaskBtn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2.5">
@@ -419,6 +425,14 @@
     </div><!-- /content -->
   </main>
 </div><!-- /app -->
+
+<div id="notificationPanel" class="notification-panel">
+  <h3>Thông báo</h3>
+
+  <div id="notificationList">
+    Chưa có thông báo
+  </div>
+</div>
 
 <!-- MODAL: TẠO / SỬA CÔNG VIỆC -->
 <div class="overlay" id="taskOverlay" onclick="closeTaskModalOutside(event)">
