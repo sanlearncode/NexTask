@@ -752,6 +752,8 @@ textarea { resize: vertical; min-height: 80px; }
     0 8px 20px rgba(108,71,255,.25);
 
   transition:.2s;
+
+  cursor:pointer;
 }
 
 #chatToggle:hover{
@@ -767,20 +769,22 @@ textarea { resize: vertical; min-height: 80px; }
   right:24px;
   bottom:92px;
 
-  width:380px;
-  height:580px;
+  width:360px;
+  height:420px;
 
   display:none;
   flex-direction:column;
 
-  background:var(--surface);
+  background:white;
 
-  border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:16px;
 
   overflow:hidden;
 
-  box-shadow:var(--shadow-lg);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.15);
+
+  border:1px solid #E5E7EB;
 
   z-index:9999;
 }
@@ -805,7 +809,7 @@ textarea { resize: vertical; min-height: 80px; }
 #chatMessages{
   flex:1;
 
-  padding:20px;
+  padding:16px;
 
   overflow-y:auto;
 
@@ -818,12 +822,12 @@ textarea { resize: vertical; min-height: 80px; }
 
 .chat-user{
   text-align:right;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .chat-ai{
   text-align:left;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .chat-bubble{
@@ -1022,14 +1026,15 @@ textarea { resize: vertical; min-height: 80px; }
   z-index:1000;
 }
 
-#notification-header{
-  padding:18px 20px;
+.notification-header{
+  padding:16px 20px;
+  border-bottom:1px solid #f1f1f1;
+}
 
-  border-bottom:1px solid var(--border);
-
-  font-size:.95rem;
+.notification-header h3{
+  margin:0;
+  font-size:15px;
   font-weight:700;
-
   color:var(--text);
 }
 
