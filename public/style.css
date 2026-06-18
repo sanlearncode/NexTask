@@ -956,6 +956,40 @@ textarea { resize: vertical; min-height: 80px; }
   border:none;
 }
 
+.calendar-nav-btn{
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:12px;
+
+  background:var(--accent);
+  color:white;
+
+  font-size:18px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 4px 12px rgba(108,71,255,.25);
+
+  transition:.2s;
+}
+
+.calendar-nav-btn:hover{
+  background:#5835ee;
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(108,71,255,.35);
+}
+
+.calendar-nav-btn:active{
+  transform:translateY(0);
+}
+
 .notification-btn{
   position:relative;
 
