@@ -729,16 +729,45 @@ textarea { resize: vertical; min-height: 80px; }
 }
 
 #chatToggle{
+
   position:fixed;
-  right:20px;
-  bottom:20px;
-  width:60px;
-  height:60px;
+
+  right:24px;
+  bottom:24px;
+
+  width:58px;
+  height:58px;
+
   border:none;
-  border-radius:50%;
+  border-radius:18px;
+
+  background:linear-gradient(
+    135deg,
+    #6C47FF,
+    #8F73FF
+  );
+
+  color:white;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
   cursor:pointer;
-  font-size:24px;
-  z-index:9999;
+
+  box-shadow:
+    0 10px 30px rgba(108,71,255,.35);
+
+  transition:.25s;
+}
+
+#chatToggle:hover{
+  transform:
+    translateY(-3px)
+    scale(1.05);
+
+  box-shadow:
+    0 15px 40px rgba(108,71,255,.45);
 }
 
 #aiChatbot{
@@ -863,9 +892,27 @@ textarea { resize: vertical; min-height: 80px; }
 
 .notification-btn{
   position:relative;
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:12px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(255,255,255,.08);
+  color:white;
+
   cursor:pointer;
-  font-size:24px;
-  margin-right:16px;
+  transition:.25s;
+}
+
+.notification-btn:hover{
+  background:rgba(255,255,255,.15);
+  transform:translateY(-2px);
 }
 
 #notificationCount{
