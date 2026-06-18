@@ -823,7 +823,7 @@ function loadNotifications(){
 function renderNotifications(){
 
   document.getElementById(
-    "notificationCount"
+    "notificationBadge"
   ).textContent =
     notifications.length;
 
