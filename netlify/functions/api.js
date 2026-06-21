@@ -1,5 +1,25 @@
 const { getClient } = require("./db");
 
+const { GoogleGenerativeAI } =
+  require("@google/generative-ai");
+
+console.log(
+  "Gemini key:",
+  process.env.GEMINI_API_KEY
+    ? "FOUND"
+    : "NOT FOUND"
+);
+
+const genAI =
+  new GoogleGenerativeAI(
+    process.env.GEMINI_API_KEY
+  );
+
+const geminiModel =
+  genAI.getGenerativeModel({
+    model: "gemini-2.5-flash"
+  });
+
 const HEADERS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin":  "*",
@@ -113,6 +133,108 @@ exports.handler = async (event) => {
       }
       return respond({ success: true });
     }
+
+// POST /api/chatbot
+if (method === "POST" && seg0 === "chatbot") {
+
+  const uid = getUserId(event);
+
+  if (!uid)
+    return fail("Yêu cầu xác thực", 401);
+
+  const { message } = getBody(event);
+
+  if (!message?.trim())
+    return fail("Thiếu nội dung câu hỏi");
+
+  const { rows: tasks } = await client.query(
+    `
+    SELECT
+      title,
+      description,
+      deadline,
+      status,
+      importance,
+      urgency
+    FROM tasks
+    WHERE user_id = $1
+    ORDER BY deadline
+    `,
+    [uid]
+  );
+
+const prompt = `
+Bạn là trợ lý AI của NexTask.
+
+Dữ liệu công việc:
+
+${JSON.stringify(tasks,null,2)}
+
+Nhiệm vụ:
+
+1. Nếu người dùng hỏi:
+   "Tôi nên làm gì trước?"
+   => sắp xếp theo:
+   - deadline gần nhất
+   - urgency cao
+   - importance cao
+
+2. Nếu người dùng hỏi cách làm một công việc
+   => chia thành các bước cụ thể.
+
+3. Nếu người dùng hỏi:
+   "Hôm nay tôi nên làm gì?"
+   => chỉ đề xuất tối đa 3 việc.
+
+4. Trả lời bằng tiếng Việt.
+
+Câu hỏi:
+
+${message}
+`;
+
+console.log("Chatbot route");
+
+console.log("User:", uid);
+
+console.log("Message:", message);
+
+console.log(
+  "Tasks found:",
+  tasks.length
+);
+
+  try {
+
+  const result =
+    await geminiModel.generateContent(prompt);
+
+  const reply =
+    result.response.text();
+
+  return respond({ reply });
+
+}
+catch(err){
+
+  console.error(
+    "Gemini Error:",
+    err
+  );
+
+  return fail(
+    "AI hiện không phản hồi",
+    500
+  );
+}
+
+  const reply =
+    result.response.text();
+
+  return respond({
+    reply
+  });
+}
 
     //  TASKS
 

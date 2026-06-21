@@ -34,6 +34,16 @@ const apiPut    = (path, body)  => apiFetch(path, { method: "PUT",    body: JSON
 const apiPatch  = (path, body)  => apiFetch(path, { method: "PATCH",  body: JSON.stringify(body) });
 const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 
+async function askAI(message){
+
+  const data = await apiPost(
+    "chatbot",
+    { message }
+  );
+
+  return data.reply;
+}
+
 //  AUTH
 let loginRole = "user";
 
@@ -136,14 +146,15 @@ function initApp() {
 
 //  VIEWS
 function showView(v) {
-  ["tasks","stats","admin"].forEach(x => {
+  ["tasks","stats","calendar","admin"].forEach(x => {
     document.getElementById("view-" + x).style.display = x === v ? "block" : "none";
     document.getElementById("nav-"  + x)?.classList.toggle("active", x === v);
   });
-  const titles = { tasks:"Công việc của tôi", stats:"Thống kê & Phân tích", admin:"Quản lý tài khoản" };
+  const titles = { tasks:"Công việc của tôi", stats:"Thống kê & Phân tích", calendar:"Lịch công việc", admin:"Quản lý tài khoản" };
   document.getElementById("pageTitle").textContent = titles[v];
   if (v === "tasks") loadTasks();
   if (v === "stats") loadStats();
+  if (v === "calendar") loadCalendar();
   if (v === "admin") loadAdmin();
 }
 
@@ -164,7 +175,10 @@ async function loadTasks() {
     const data = await apiGet(url);
     allTasks = data.tasks || [];
     renderTaskList(allTasks);
+
     updateTopStats();
+
+    loadNotifications();
     document.getElementById("taskCountLabel").textContent = `${allTasks.length} công việc`;
 
     // Load tags cho sidebar
@@ -603,4 +617,235 @@ function backToLanding(){
 
     document.getElementById("loginScreen")
             .classList.remove("active");
+}
+
+function toggleChat(){
+
+  const chat =
+    document.getElementById("aiChatbot");
+
+  chat.style.display =
+    chat.style.display === "flex"
+      ? "none"
+      : "flex";
+}
+
+function addMessage(text,type){
+
+  const messages =
+    document.getElementById("chatMessages");
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    type === "user"
+      ? "chat-user"
+      : "chat-ai";
+
+  div.innerHTML =
+    `<div class="chat-bubble">
+      ${esc(text)}
+    </div>`;
+
+  messages.appendChild(div);
+
+  messages.scrollTop =
+    messages.scrollHeight;
+}
+
+async function sendAIMessage(){
+
+  const input =
+    document.getElementById("chatInput");
+
+  const message =
+    input.value.trim();
+
+  if(!message) return;
+
+  addMessage(message,"user");
+
+  input.value = "";
+
+  addMessage("Đang suy nghĩ...","ai");
+
+  try{
+
+    const reply =
+      await askAI(message);
+
+    const msgs =
+      document.querySelectorAll(".chat-ai");
+
+    msgs[msgs.length-1].innerHTML =
+      `<div class="chat-bubble">
+        ${reply}
+      </div>`;
+
+  }catch(err){
+
+    const msgs =
+      document.querySelectorAll(".chat-ai");
+
+    msgs[msgs.length-1].innerHTML =
+      `<div class="chat-bubble">
+        Lỗi: ${err.message}
+      </div>`;
+  }
+}
+
+let calendarDate = new Date();
+
+function changeMonth(step){
+
+  calendarDate.setMonth(
+    calendarDate.getMonth() + step
+  );
+
+  loadCalendar();
+}
+
+function loadCalendar(){
+
+  const year =
+    calendarDate.getFullYear();
+
+  const month =
+    calendarDate.getMonth();
+
+  document.getElementById(
+    "calendarMonth"
+  ).textContent =
+    `Tháng ${month+1} / ${year}`;
+
+  const firstDay =
+    new Date(year,month,1).getDay();
+
+  const daysInMonth =
+    new Date(year,month+1,0).getDate();
+
+  const calendar =
+    document.getElementById("calendarDays");
+
+  let html = "";
+
+  for(let i=0;i<firstDay;i++){
+    html += `<div class="calendar-cell empty"></div>`;
+  }
+
+  for(let day=1;day<=daysInMonth;day++){
+
+    const dateStr =
+      `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+    const tasks =
+      allTasks.filter(
+        t => t.deadline &&
+        t.deadline.slice(0,10) === dateStr
+      );
+
+    html += `
+      <div class="calendar-cell">
+
+        <div class="calendar-date">
+          ${day}
+        </div>
+
+        ${tasks.map(t=>`
+          <div class="calendar-task">
+            ${esc(t.title)}
+          </div>
+        `).join("")}
+
+      </div>
+    `;
+  }
+
+  calendar.innerHTML = html;
+}
+
+let notifications = [];
+
+function toggleNotifications(){
+
+  const panel =
+    document.getElementById(
+      "notificationPanel"
+    );
+
+  panel.style.display =
+    panel.style.display === "block"
+      ? "none"
+      : "block";
+}
+
+function loadNotifications(){
+
+  const today =
+    todayStr();
+
+  notifications = [];
+
+  allTasks.forEach(task => {
+
+    if(!task.deadline)
+      return;
+
+    const deadline =
+      task.deadline.slice(0,10);
+
+    if(
+      deadline < today &&
+      task.status !== "done"
+    ){
+      notifications.push({
+        type:"overdue",
+        text:`⚠️ ${task.title} đã quá hạn`
+      });
+    }
+
+    else if(
+      deadline === today &&
+      task.status !== "done"
+    ){
+      notifications.push({
+        type:"soon",
+        text:`📅 Hôm nay: ${task.title}`
+      });
+    }
+
+  });
+
+  renderNotifications();
+}
+
+function renderNotifications(){
+
+  document.getElementById(
+    "notificationBadge"
+  ).textContent =
+    notifications.length;
+
+  const list =
+    document.getElementById(
+      "notificationList"
+    );
+
+  if(!notifications.length){
+
+    list.innerHTML =
+      `<div class="notification-item">
+        Không có thông báo
+      </div>`;
+
+    return;
+  }
+
+  list.innerHTML =
+    notifications.map(n => `
+      <div class="notification-item ${n.type}">
+        ${n.text}
+      </div>
+    `).join("");
 }
