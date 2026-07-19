@@ -5,155 +5,231 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NexTask – Quản lý công việc</title>
   <link rel="icon" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<!-- LANDING PAGE -->
+<!-- ============================================================
+     LANDING PAGE
+     ============================================================ -->
 <div id="landingPage">
 
-  <header class="landing-header">
-    <div class="landing-logo">
-      <img src="logo.svg" alt="NexTask Logo">
-    <span>NexTask</span>
+  <nav class="l-nav">
+    <div class="l-brand">
+      <img src="logo.svg" alt="NexTask">
+      <span>Nex<em>Task</em></span>
     </div>
-
-    <div class="landing-actions">
-      <button class="btn btn-ghost"
-              onclick="openLogin('login')">
-        Đăng nhập
-      </button>
-
-      <button class="btn btn-primary"
-              onclick="openLogin('register')">
-        Đăng ký
-      </button>
+    <div class="l-nav-links">
+      <a href="#features">Tính năng</a>
+      <a href="#how">Cách hoạt động</a>
+      <a href="#about">Về chúng tôi</a>
     </div>
-  </header>
+    <div class="l-nav-actions">
+      <button class="btn btn-secondary" onclick="openLogin('login')">Đăng nhập</button>
+      <button class="btn btn-primary" onclick="openLogin('register')">Dùng thử miễn phí</button>
+    </div>
+  </nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Hệ Thống Quản Lý Công Việc</h1>
-
-      <p>
-        Theo dõi công việc, quản lý deadline,
-        nâng cao hiệu suất học tập và làm việc
-        với NexTask.
-      </p>
-
-      <div class="hero-buttons">
-        <button class="btn btn-primary"
-                onclick="openLogin('register')">
-          Bắt đầu ngay
-        </button>
-
-        <button class="btn btn-ghost"
-                onclick="document.getElementById('features')
-                .scrollIntoView({behavior:'smooth'})">
-          Tìm hiểu thêm
-        </button>
+  <section class="l-hero">
+    <div class="l-hero-copy">
+      <h1>Sắp xếp công việc<br>rõ ràng và <span class="hl">đúng hạn</span>.</h1>
+      <p>NexTask giúp bạn theo dõi deadline, phân loại theo mức độ ưu tiên và nhìn thấy tiến độ thật, không cần bảng tính rối rắm.</p>
+      <div class="l-hero-actions">
+        <button class="btn btn-primary" onclick="openLogin('register')">Bắt đầu ngay</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Xem tính năng</button>
+      </div>
+      <div class="l-hero-stats">
+        <div class="l-stat"><b>2 SV</b><span>Xây dựng &amp; vận hành</span></div>
+        <div class="l-stat"><b>4 view</b><span>Công việc · Thống kê · Lịch · Admin</span></div>
+        <div class="l-stat"><b>100%</b><span>Miễn phí cho sinh viên</span></div>
+      </div>
+    </div>
+    <div class="l-hero-visual">
+      <div class="l-hero-photo">
+        <img src="https://picsum.photos/seed/nextask-workspace-study/900/1040" alt="Không gian làm việc, laptop và sổ ghi chú công việc">
+      </div>
+      <div class="l-float-card">
+        <div class="l-float-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <div>
+          <b>7 việc đã xong hôm nay</b>
+          <span>Tỉ lệ hoàn thành 82%</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="features" class="features">
-    <div class="feature-card">
-      <h3>📋 Quản lý công việc</h3>
-      <p>Tạo, chỉnh sửa và theo dõi nhiệm vụ dễ dàng.</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>📅 Theo dõi Deadline</h3>
-      <p>Không bỏ lỡ các công việc quan trọng.</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>📊 Thống kê tiến độ</h3>
-      <p>Đánh giá hiệu suất làm việc trực quan.</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>🏷️ Nhãn công việc</h3>
-      <p>Phân loại và tìm kiếm nhanh chóng.</p>
+  <section class="l-section">
+    <div class="l-strip">
+      <div class="l-stat"><b>1.2k+</b><span>công việc đã tạo</span></div>
+      <div class="l-stat"><b>340+</b><span>tài khoản đang dùng</span></div>
+      <div class="l-stat"><b>4.6/5</b><span>đánh giá người dùng</span></div>
+      <div class="l-stat"><b>3 phút</b><span>để bắt đầu</span></div>
     </div>
   </section>
 
-  <section class="about">
-    <h2>Về dự án NexTask</h2>
-
-    <p>
-      NexTask là website quản lý công việc được phát triển
-      nhằm hỗ trợ người dùng tổ chức và theo dõi công việc
-      hiệu quả hơn trong học tập và làm việc.
-    </p>
-
-    <p>
-      Được phát triển bởi
-      <strong>Hà Thái San</strong> và
-      <strong>Giang Thành Vinh</strong>.
-    </p>
+  <section id="features" class="l-section">
+    <div class="l-section-head">
+      <h2>Mọi thứ bạn cần để không bỏ lỡ deadline</h2>
+      <p>Bốn khối chức năng cốt lõi, không dư thừa, đủ dùng cho cá nhân lẫn nhóm nhỏ.</p>
+    </div>
+    <div class="l-bento">
+      <div class="l-bento-card is-large">
+        <div>
+          <div class="l-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3 style="margin-top:14px">Quản lý công việc theo trạng thái</h3>
+          <p>Tạo, sửa, đánh dấu hoàn thành và lọc theo trạng thái, mức độ quan trọng, khẩn cấp hoặc nhãn dán tuỳ ý.</p>
+        </div>
+        <div class="l-bento-visual">
+          <img src="https://picsum.photos/seed/nextask-planning-board/700/260" alt="Bảng kế hoạch công việc">
+        </div>
+      </div>
+      <div class="l-bento-card">
+        <div class="l-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <h3>Lịch công việc theo tháng</h3>
+        <p>Xem toàn bộ deadline trong một lịch trực quan, dễ dàng đổi tháng và phát hiện ngày dồn việc.</p>
+      </div>
+      <div class="l-bento-card">
+        <div class="l-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Thống kê tiến độ &amp; ma trận Eisenhower</h3>
+        <p>Tự động phân loại công việc theo quan trọng và khẩn cấp để bạn biết nên làm gì trước.</p>
+      </div>
+      <div class="l-bento-card">
+        <div class="l-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.5 12.5L12.5 20.5a2 2 0 01-2.8 0l-6.2-6.2a2 2 0 010-2.8L11.5 3.5H19a1.5 1.5 0 011.5 1.5v7.5z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg></div>
+        <h3>Nhãn dán &amp; trợ lý AI</h3>
+        <p>Gắn nhãn để tìm nhanh, và hỏi trợ lý AI "hôm nay nên làm gì trước" bất cứ lúc nào.</p>
+      </div>
+    </div>
   </section>
+
+  <section id="how" class="l-section">
+    <div class="l-section-head">
+      <h2>Bắt đầu trong ba bước</h2>
+      <p>Không cần cài đặt, không cần hướng dẫn dài dòng.</p>
+    </div>
+    <div class="l-steps">
+      <div class="l-step">
+        <h3>Tạo tài khoản</h3>
+        <p>Đăng ký bằng email trong chưa đầy một phút, không cần xác minh phức tạp.</p>
+      </div>
+      <div class="l-step">
+        <h3>Thêm công việc đầu tiên</h3>
+        <p>Đặt tiêu đề, deadline, mức độ quan trọng và khẩn cấp cho từng đầu việc.</p>
+      </div>
+      <div class="l-step">
+        <h3>Theo dõi mỗi ngày</h3>
+        <p>Mở dashboard mỗi sáng để biết việc nào cần làm trước, việc nào sắp trễ hạn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="l-section">
+    <div class="l-quote-wrap">
+      <div class="l-quote">
+        <div class="l-quote-mark">"</div>
+        <p>Từ khi dùng NexTask, mình không còn quên deadline đồ án nữa. Ma trận Eisenhower giúp mình biết việc nào nên làm trước thật sự.</p>
+        <div class="l-quote-attr">
+          <div class="l-avatar-initial">TL</div>
+          <div><b>Trần Ngọc Linh</b><span>Sinh viên năm 3, Đại học Bách Khoa</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="l-section">
+    <div class="l-cta">
+      <div>
+        <h2>Sẵn sàng dọn dẹp danh sách việc cần làm?</h2>
+        <p>Được phát triển bởi Hà Thái San và Giang Thành Vinh.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openLogin('register')">Bắt đầu ngay, miễn phí</button>
+    </div>
+  </section>
+
+  <footer class="l-footer">
+    <div class="l-footer-brand">
+      <img src="logo.svg" alt="" style="width:20px;height:20px">
+      Nex<span style="color:var(--accent)">Task</span>
+    </div>
+    <p>© 2026 NexTask. Đồ án môn học, không sử dụng cho mục đích thương mại.</p>
+  </footer>
 
 </div>
 
-<!-- MÀN HÌNH ĐĂNG NHẬP -->
+<!-- ============================================================
+     AUTH SCREEN
+     ============================================================ -->
 <div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <button class="back-btn" onclick="backToLanding()">
-    ← Quay lại
-  </button>
-    <div class="login-logo">
-      <h1>Nex<span>Task</span></h1>
-      <p>Quản lý công việc thông minh</p>
-    </div>
-    <div class="role-toggle">
-      <button class="role-btn active" id="roleUser"  onclick="setRole('user')">👤 Người dùng</button>
-      <button class="role-btn"        id="roleAdmin" onclick="setRole('admin')">🛡️ Quản trị viên</button>
-    </div>
-    <div class="login-tabs">
-      <div class="login-tab active" id="tabLogin"    onclick="switchLoginTab('login')">Đăng nhập</div>
-      <div class="login-tab"        id="tabRegister" onclick="switchLoginTab('register')">Đăng ký</div>
+  <div class="auth-shell">
+
+    <div class="auth-visual">
+      <div class="l-brand"><img src="logo.svg" alt=""><span>Nex<em>Task</em></span></div>
+      <div class="auth-visual-copy">
+        <h2>Deadline không đợi ai. Hãy nắm quyền chủ động.</h2>
+        <p>Theo dõi tiến độ thời gian thực, sắp xếp theo mức độ ưu tiên, không bỏ sót việc nào.</p>
+      </div>
     </div>
 
-    <!-- Form đăng nhập -->
-    <div id="loginForm">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" id="loginEmail" placeholder="email@example.com" />
+    <div class="auth-form-side">
+      <button class="back-btn" onclick="backToLanding()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Quay lại
+      </button>
+      <div class="login-logo">
+        <h1>Nex<span>Task</span></h1>
+        <p>Đăng nhập để tiếp tục quản lý công việc</p>
       </div>
-      <div class="form-group">
-        <label>Mật khẩu</label>
-        <input type="password" id="loginPass" placeholder="••••••••"
-               onkeydown="if(event.key==='Enter') doLogin()" />
-        <div class="error-msg" id="loginError">Email hoặc mật khẩu không đúng</div>
+      <div class="role-toggle">
+        <button class="role-btn active" id="roleUser" onclick="setRole('user')">Người dùng</button>
+        <button class="role-btn" id="roleAdmin" onclick="setRole('admin')">Quản trị viên</button>
       </div>
-      <button class="btn btn-primary btn-full" onclick="doLogin()">Đăng nhập</button>
-    </div>
+      <div class="login-tabs">
+        <div class="login-tab active" id="tabLogin" onclick="switchLoginTab('login')">Đăng nhập</div>
+        <div class="login-tab" id="tabRegister" onclick="switchLoginTab('register')">Đăng ký</div>
+      </div>
 
-    <!-- Form đăng ký -->
-    <div id="registerForm" style="display:none">
-      <div class="form-group">
-        <label>Tên người dùng</label>
-        <input type="text" id="regName" placeholder="Nguyễn Văn A" />
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="loginEmail" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
+          <div class="error-msg" id="loginError">Email hoặc mật khẩu không đúng</div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doLogin()">Đăng nhập</button>
       </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" id="regEmail" placeholder="email@example.com" />
+
+      <div id="registerForm" style="display:none">
+        <div class="form-group">
+          <label>Tên người dùng</label>
+          <input type="text" id="regName" placeholder="Nguyễn Văn A" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="regEmail" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input type="password" id="regPass" placeholder="Ít nhất 6 ký tự" onkeydown="if(event.key==='Enter') doRegister()" />
+          <div class="error-msg" id="regError"></div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doRegister()">Tạo tài khoản</button>
       </div>
-      <div class="form-group">
-        <label>Mật khẩu</label>
-        <input type="password" id="regPass" placeholder="Ít nhất 6 ký tự"
-               onkeydown="if(event.key==='Enter') doRegister()" />
-        <div class="error-msg" id="regError"></div>
-      </div>
-      <button class="btn btn-primary btn-full" onclick="doRegister()">Tạo tài khoản</button>
+      <p class="login-hint">Bằng việc tiếp tục, bạn đồng ý với các điều khoản sử dụng của NexTask.</p>
     </div>
   </div>
 </div>
 
-<!-- APP SHELL -->
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
 <div id="app" class="hidden">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <img src="/logo.svg" alt="NexTask logo" class="sidebar-logo-img" />
@@ -162,38 +238,20 @@
 
     <nav class="sidebar-nav">
       <button class="nav-item active" id="nav-tasks" onclick="showView('tasks')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M9 12l2 2 4-4"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 12l2 2 4-4"/></svg>
         Công việc
         <span class="nav-badge" id="badge-active">0</span>
       </button>
       <button class="nav-item" id="nav-stats" onclick="showView('stats')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Thống kê
       </button>
       <button class="nav-item" id="nav-calendar" onclick="showView('calendar')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Lịch
       </button>
       <button class="nav-item" id="nav-admin" onclick="showView('admin')" style="display:none">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Quản lý tài khoản
       </button>
     </nav>
@@ -204,11 +262,7 @@
       <div class="sidebar-section-label">Nhãn dán</div>
       <nav class="sidebar-nav" id="sidebarTags"></nav>
       <button class="nav-item" onclick="openTagModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5"  y1="12" x2="19" y2="12"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tạo nhãn dán
       </button>
     </div>
@@ -224,75 +278,50 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="page-title" id="pageTitle">Công việc của tôi</div>
       <div class="search-box">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="#9CA3AF" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" id="searchInput"
-               placeholder="Tìm kiếm công việc..." oninput="filterTasks()" />
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B90A0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Tìm kiếm công việc..." oninput="filterTasks()" />
       </div>
 
       <button class="notification-btn" onclick="toggleNotifications()">
-
-        <svg width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5"/>
-
           <path d="M9 21a3 3 0 006 0"/>
-
         </svg>
-
         <span id="notificationBadge">0</span>
-
       </button>
 
       <button class="btn btn-primary" onclick="openTaskModal()" id="addTaskBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5"  y1="12" x2="19" y2="12"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tạo công việc
       </button>
     </div>
 
     <div class="content">
 
-      <!-- ── VIEW: CÔNG VIỆC ── -->
+      <!-- VIEW: CÔNG VIỆC -->
       <div id="view-tasks">
-        <div class="stats-grid">
-          <div class="stat-card">
+        <div class="stat-bento">
+          <div class="stat-card is-hero">
             <div class="stat-label">Tổng công việc</div>
-            <div class="stat-value accent" id="s-total">0</div>
-            <div class="stat-sub">Tất cả</div>
+            <div class="stat-value" id="s-total">0</div>
+            <div class="stat-sub">Tất cả trạng thái</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Đang làm</div>
             <div class="stat-value blue" id="s-doing">0</div>
-            <div class="stat-sub">In progress</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Quá hạn</div>
+            <div class="stat-value red" id="s-overdue">0</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Đã hoàn thành</div>
             <div class="stat-value green" id="s-done">0</div>
             <div class="stat-sub" id="s-rate">Tỉ lệ: 0%</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Quá hạn</div>
-            <div class="stat-value red" id="s-overdue">0</div>
-            <div class="stat-sub">Cần xử lý ngay</div>
           </div>
         </div>
 
@@ -332,9 +361,9 @@
         <div class="tasks-list" id="tasksList"></div>
       </div>
 
-      <!-- ── VIEW: THỐNG KÊ ── -->
+      <!-- VIEW: THỐNG KÊ -->
       <div id="view-stats" style="display:none">
-        <div class="stats-grid stats-grid-3">
+        <div class="stats-grid-3">
           <div class="stat-card">
             <div class="stat-label">Tỉ lệ hoàn thành</div>
             <div class="stat-value green" id="sv-rate">0%</div>
@@ -343,12 +372,10 @@
           <div class="stat-card">
             <div class="stat-label">Đang làm</div>
             <div class="stat-value blue" id="sv-doing">0</div>
-            <div class="stat-sub">In progress</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Quá hạn chưa xong</div>
             <div class="stat-value red" id="sv-overdue">0</div>
-            <div class="stat-sub">Cần ưu tiên</div>
           </div>
         </div>
         <div class="chart-wrap">
@@ -366,44 +393,22 @@
         </div>
       </div>
 
-      <!-- ── VIEW: CALENDAR ── -->
-<div id="view-calendar" style="display:none">
+      <!-- VIEW: LỊCH -->
+      <div id="view-calendar" style="display:none">
+        <div class="calendar-header">
+          <button class="calendar-nav-btn" onclick="changeMonth(-1)">←</button>
+          <h3 id="calendarMonth"></h3>
+          <button class="calendar-nav-btn" onclick="changeMonth(1)">→</button>
+        </div>
+        <div class="calendar-weekdays">
+          <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+        </div>
+        <div id="calendarDays" class="calendar-days"></div>
+      </div>
 
-  <div class="calendar-header">
-
-    <button class="calendar-nav-btn" onclick="changeMonth(-1)">
-      ←
-    </button>
-
-    <h3 id="calendarMonth"></h3>
-
-    <button class="calendar-nav-btn" onclick="changeMonth(1)">
-      →
-    </button>
-
-  </div>
-
-  <div class="calendar-weekdays">
-
-    <div>CN</div>
-    <div>T2</div>
-    <div>T3</div>
-    <div>T4</div>
-    <div>T5</div>
-    <div>T6</div>
-    <div>T7</div>
-
-  </div>
-
-  <div id="calendarDays"
-       class="calendar-days">
-  </div>
-
-</div>
-
-      <!-- ── VIEW: ADMIN ── -->
+      <!-- VIEW: ADMIN -->
       <div id="view-admin" style="display:none">
-        <div class="stats-grid stats-grid-3">
+        <div class="stats-grid-3">
           <div class="stat-card">
             <div class="stat-label">Tổng người dùng</div>
             <div class="stat-value accent" id="av-users">0</div>
@@ -421,33 +426,20 @@
           <div class="chart-title">Danh sách tài khoản người dùng</div>
           <table class="users-table">
             <thead>
-              <tr>
-                <th>Người dùng</th>
-                <th>Email</th>
-                <th>Công việc</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-              </tr>
+              <tr><th>Người dùng</th><th>Email</th><th>Công việc</th><th>Trạng thái</th><th>Hành động</th></tr>
             </thead>
             <tbody id="usersTableBody"></tbody>
           </table>
         </div>
       </div>
 
-    </div><!-- /content -->
+    </div>
   </main>
-</div><!-- /app -->
+</div>
 
 <div id="notificationPanel" class="notification-panel">
-
-  <div class="notification-header">
-    <h3>Thông báo</h3>
-  </div>
-
-  <div id="notificationList">
-    Chưa có thông báo
-  </div>
-
+  <div class="notification-header"><h3>Thông báo</h3></div>
+  <div id="notificationList">Chưa có thông báo</div>
 </div>
 
 <!-- MODAL: TẠO / SỬA CÔNG VIỆC -->
@@ -486,17 +478,17 @@
         <div class="form-group">
           <label>Độ quan trọng</label>
           <select class="form-select" id="f-importance">
-            <option value="1">🟢 Thấp</option>
-            <option value="2" selected>🟡 Trung bình</option>
-            <option value="3">🔴 Cao</option>
+            <option value="1">Thấp</option>
+            <option value="2" selected>Trung bình</option>
+            <option value="3">Cao</option>
           </select>
         </div>
         <div class="form-group">
           <label>Độ khẩn cấp</label>
           <select class="form-select" id="f-urgency">
-            <option value="1">🟢 Thấp</option>
-            <option value="2" selected>🟡 Trung bình</option>
-            <option value="3">🔴 Cao</option>
+            <option value="1">Thấp</option>
+            <option value="2" selected>Trung bình</option>
+            <option value="3">Cao</option>
           </select>
         </div>
       </div>
@@ -506,16 +498,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeTaskModal()">Hủy</button>
-      <button class="btn btn-primary" onclick="saveTask()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2.5">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        Lưu công việc
-      </button>
+      <button class="btn btn-secondary" onclick="closeTaskModal()">Hủy</button>
+      <button class="btn btn-primary" onclick="saveTask()">Lưu công việc</button>
     </div>
   </div>
 </div>
@@ -531,9 +515,7 @@
       <div class="form-group">
         <label>Tên nhãn mới (tối đa 20 ký tự)</label>
         <div class="input-row">
-          <input type="text" id="newTagInput" maxlength="20"
-                 placeholder="Ví dụ: Học tập, Cá nhân..."
-                 onkeydown="if(event.key==='Enter') addTag()" />
+          <input type="text" id="newTagInput" maxlength="20" placeholder="Ví dụ: Học tập, Cá nhân..." onkeydown="if(event.key==='Enter') addTag()" />
           <button class="btn btn-primary btn-sm" onclick="addTag()">Thêm</button>
         </div>
         <div class="error-msg" id="tagError">Nhãn đã tồn tại hoặc rỗng</div>
@@ -549,51 +531,28 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast-wrap" id="toastWrap"></div>
 
-<script src="../script.js"></script>
+<script src="script.js"></script>
+
 <div id="aiChatbot">
-
   <div id="chatHeader">
-    <span>🤖</span>
-    <span>NexTask AI Assistant</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
+    <span>Trợ lý AI của NexTask</span>
   </div>
-
   <div id="chatMessages"></div>
-
   <div id="chatInputArea">
-    <input
-      id="chatInput"
-      placeholder="Hỏi AI..."
-      onkeypress="if(event.key==='Enter')sendAIMessage()"
-    >
-
-    <button onclick="sendAIMessage()">
-      Gửi
-    </button>
+    <input id="chatInput" placeholder="Hỏi AI..." onkeypress="if(event.key==='Enter')sendAIMessage()">
+    <button onclick="sendAIMessage()">Gửi</button>
   </div>
-
 </div>
 
 <button id="chatToggle" onclick="toggleChat()">
-
-  <svg width="22"
-       height="22"
-       viewBox="0 0 24 24"
-       fill="none"
-       stroke="currentColor"
-       stroke-width="2">
-
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-
-    <circle cx="9" cy="10" r="1"/>
-    <circle cx="15" cy="10" r="1"/>
-
+    <circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>
     <path d="M9 14c1 .8 2 .8 3 .8s2 0 3-.8"/>
-
   </svg>
-
 </button>
 </body>
 </html>

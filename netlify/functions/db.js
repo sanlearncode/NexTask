@@ -94,9 +94,7 @@ CREATE TABLE IF NOT EXISTS task_tags (
   PRIMARY KEY (task_id, tag_id)
 );
 
--- ════════════════════════════════════════════════
 -- INDEX – tăng tốc các truy vấn thường dùng
--- ════════════════════════════════════════════════
 CREATE INDEX IF NOT EXISTS idx_tasks_user_id    ON tasks(user_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_status     ON tasks(status);
 CREATE INDEX IF NOT EXISTS idx_tasks_deadline   ON tasks(deadline);
@@ -114,14 +112,12 @@ VALUES ('admin@nextask.vn', '92668751')
 ON CONFLICT (email) DO NOTHING;
 `;
 
-//  getClient – kết nối DB và chạy schema
 async function getClient() {
   const client = new Client({
     connectionString: process.env.NETLIFY_DATABASE_URL,
     ssl: { rejectUnauthorized: false },
   });
   await client.connect();
-  // Chạy INIT_SQL mỗi cold-start; idempotent nhờ IF NOT EXISTS
   await client.query(INIT_SQL);
   return client;
 }
