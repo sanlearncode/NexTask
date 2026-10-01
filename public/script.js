@@ -1,6 +1,6 @@
 const API = "/.netlify/functions/api";
 
-// ── STATE 
+// ── STATE
 let currentUser     = null;   // { id, username, email, role, sessionId? }
 let editingTaskId   = null;
 let activeTagFilter = null;
@@ -14,7 +14,7 @@ function hash(s) {
   return String(h);
 }
 
-// ── HTTP helpers 
+// ── HTTP helpers
 async function apiFetch(path, options = {}) {
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
   if (currentUser?.role === "user"  && currentUser.id)
@@ -35,12 +35,7 @@ const apiPatch  = (path, body)  => apiFetch(path, { method: "PATCH",  body: JSON
 const apiDelete = (path)        => apiFetch(path, { method: "DELETE" });
 
 async function askAI(message){
-
-  const data = await apiPost(
-    "chatbot",
-    { message }
-  );
-
+  const data = await apiPost("chatbot", { message });
   return data.reply;
 }
 
@@ -124,7 +119,7 @@ async function logout() {
   document.getElementById("loginScreen").classList.remove("active");
   document.getElementById("app").classList.add("hidden");
   document.getElementById("landingPage").style.display = "block";
-  
+
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPass").value  = "";
 }
@@ -181,7 +176,6 @@ async function loadTasks() {
     loadNotifications();
     document.getElementById("taskCountLabel").textContent = `${allTasks.length} công việc`;
 
-    // Load tags cho sidebar
     await loadTags();
   } catch (e) {
     document.getElementById("tasksList").innerHTML =
@@ -189,7 +183,7 @@ async function loadTasks() {
   }
 }
 
-function filterTasks() { loadTasks(); } 
+function filterTasks() { loadTasks(); }
 
 async function loadTags() {
   try {
@@ -200,7 +194,7 @@ async function loadTags() {
   } catch {}
 }
 
-// ── Render 
+// ── Render
 const STATUS_MAP = {
   todo:  { label:"Chưa làm", cls:"badge-status-todo"  },
   doing: { label:"Đang làm", cls:"badge-status-doing" },
@@ -216,13 +210,14 @@ const URG_MAP = {
   2:{label:"Trung bình", cls:"badge-urg-med" },
   3:{label:"Cao",        cls:"badge-urg-high"},
 };
+const PRIORITY_CLASS = (imp) => imp >= 3 ? "pr-high" : imp === 2 ? "pr-med" : "pr-low";
 
 function renderTaskList(tasks) {
   const el = document.getElementById("tasksList");
   if (!tasks.length) {
     el.innerHTML = `<div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M12 9v6"/>
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 12h6M12 9v6"/>
       </svg>
       <h3>Chưa có công việc nào</h3><p>Nhấn "Tạo công việc" để bắt đầu</p>
     </div>`;
@@ -241,9 +236,10 @@ function taskCardHTML(t) {
   const isSoon    = dl && dl >= today && dl <= addDays(today,3) && t.status !== "done";
   const dlClass   = isOverdue ? "overdue" : isSoon ? "soon" : "";
   const tags = (t.tags || []).map(tag => `<span class="badge badge-tag">${esc(tag)}</span>`).join("");
+  const prCls = PRIORITY_CLASS(t.importance);
 
   return `
-  <div class="task-card${t.status==="done"?" done":""}" onclick="editTask(${t.id})">
+  <div class="task-card ${prCls}${t.status==="done"?" done":""}" onclick="editTask(${t.id})">
     <div class="task-top">
       <div class="task-checkbox${t.status==="done"?" checked":""}"
            onclick="event.stopPropagation();toggleDone(${t.id},'${t.status}')"></div>
@@ -255,7 +251,9 @@ function taskCardHTML(t) {
           <span class="badge ${imp.cls}">★ ${imp.label}</span>
           <span class="badge ${urg.cls}">⚡ ${urg.label}</span>
           ${tags}
-          ${dl ? `<span class="deadline ${dlClass}">📅 ${fmtDate(dl)}</span>` : ""}
+          ${dl ? `<span class="deadline ${dlClass}">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            ${fmtDate(dl)}</span>` : ""}
         </div>
       </div>
       <div class="task-actions">
@@ -378,13 +376,13 @@ function renderTagSelector(selected = []) {
               data-tag="${esc(tag.name)}"
               onclick="this.classList.toggle('selected')">${esc(tag.name)}</div>`
       ).join("")
-    : `<span style="font-size:.8rem;color:var(--text-muted)">Chưa có nhãn — hãy tạo nhãn trước</span>`;
+    : `<span style="font-size:.8rem;color:var(--muted)">Chưa có nhãn — hãy tạo nhãn trước</span>`;
 }
 
 function renderSidebarTags() {
   document.getElementById("sidebarTags").innerHTML = allTags.map(tag =>
     `<button class="nav-item" onclick="setTagFilter('${esc(tag.name)}')" style="font-size:.82rem">
-       <span style="width:8px;height:8px;background:var(--accent);border-radius:50%;flex-shrink:0"></span>
+       <span style="width:7px;height:7px;background:var(--accent);border-radius:50%;flex-shrink:0"></span>
        ${esc(tag.name)}
      </button>`
   ).join("");
@@ -413,7 +411,7 @@ function renderAllTagsInModal() {
            <span class="del-tag" onclick="deleteTag(${tag.id},'${esc(tag.name)}')" title="Xóa nhãn">✕</span>
          </div>`
       ).join("")
-    : `<span style="font-size:.8rem;color:var(--text-muted)">Chưa có nhãn nào</span>`;
+    : `<span style="font-size:.8rem;color:var(--muted)">Chưa có nhãn nào</span>`;
 }
 
 function openTagModal() {
@@ -473,18 +471,18 @@ async function loadStats() {
   const maxS = Math.max(todo, doing, done, 1);
   document.getElementById("statusChart").innerHTML =
     `<div class="bar-chart">
-       ${barColHTML("Chưa làm", todo,  maxS, "#9CA3AF")}
-       ${barColHTML("Đang làm", doing, maxS, "#3B82F6")}
-       ${barColHTML("Đã làm",   done,  maxS, "#22C55E")}
+       ${barColHTML("Chưa làm", todo,  maxS, "var(--muted)")}
+       ${barColHTML("Đang làm", doing, maxS, "var(--accent)")}
+       ${barColHTML("Đã làm",   done,  maxS, "var(--success)")}
      </div>`;
 
   const impCfg = [
-    { lv:3, label:"🔴 Quan trọng cao",  color:"var(--red)"    },
-    { lv:2, label:"🟡 Quan trọng TB",   color:"var(--orange)" },
-    { lv:1, label:"🟢 Quan trọng thấp", color:"var(--green)"  },
+    { lv:3, label:"Quan trọng cao",  color:"var(--danger)"  },
+    { lv:2, label:"Quan trọng TB",   color:"var(--warning)" },
+    { lv:1, label:"Quan trọng thấp", color:"var(--success)" },
   ];
   document.getElementById("impChart").innerHTML =
-    `<div style="display:flex;flex-direction:column;gap:12px">` +
+    `<div style="display:flex;flex-direction:column;gap:13px">` +
     impCfg.map(({ lv, label, color }) => {
       const g = tasks.filter(t => t.importance === lv);
       return progressRowHTML(label, g.filter(t=>t.status==="done").length, g.length, color);
@@ -495,10 +493,10 @@ async function loadStats() {
   const q3 = tasks.filter(t => t.importance< 3  && t.urgency===3);
   const q4 = tasks.filter(t => t.importance< 3  && t.urgency< 3);
   document.getElementById("eisenhower").innerHTML =
-    matrixCellHTML("mc-q1","🔴 Khẩn & Quan trọng",          "Làm ngay",     q1) +
-    matrixCellHTML("mc-q2","🟡 Quan trọng, không khẩn",     "Lên kế hoạch", q2) +
-    matrixCellHTML("mc-q3","🟠 Khẩn, ít quan trọng",        "Uỷ quyền",     q3) +
-    matrixCellHTML("mc-q4","🟢 Không khẩn & ít quan trọng", "Để sau",       q4);
+    matrixCellHTML("mc-q1","Khẩn & Quan trọng",          "Làm ngay",     q1) +
+    matrixCellHTML("mc-q2","Quan trọng, không khẩn",     "Lên kế hoạch", q2) +
+    matrixCellHTML("mc-q3","Khẩn, ít quan trọng",        "Uỷ quyền",     q3) +
+    matrixCellHTML("mc-q4","Không khẩn & ít quan trọng", "Để sau",       q4);
 }
 
 function barColHTML(label, val, max, color) {
@@ -544,7 +542,7 @@ async function loadAdmin() {
     document.getElementById("usersTableBody").innerHTML = users.map(u => `
       <tr>
         <td><strong>${esc(u.username)}</strong></td>
-        <td style="color:var(--text-muted)">${esc(u.email)}</td>
+        <td style="color:var(--muted)">${esc(u.email)}</td>
         <td>${u.task_count||0} cv (${u.done_count||0} hoàn thành)</td>
         <td>
           <span class="status-dot ${u.locked?"dot-locked":"dot-active"}"></span>
@@ -559,7 +557,7 @@ async function loadAdmin() {
       </tr>`).join("");
   } catch (e) {
     document.getElementById("usersTableBody").innerHTML =
-      `<tr><td colspan="5" style="color:var(--text-muted);padding:20px">Không thể tải dữ liệu: ${esc(e.message)}</td></tr>`;
+      `<tr><td colspan="5" style="color:var(--muted);padding:20px">Không thể tải dữ liệu: ${esc(e.message)}</td></tr>`;
   }
 }
 
@@ -583,8 +581,7 @@ function addDays(d,n)  { const dt=new Date(d); dt.setDate(dt.getDate()+n); retur
 
 function showLoading(elId) {
   const el = document.getElementById(elId);
-  if (el) el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">
-    <div style="font-size:1.4rem;margin-bottom:8px">⏳</div>Đang tải...</div>`;
+  if (el) el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">Đang tải...</div>`;
 }
 
 function showToast(msg, type = "") {
@@ -596,168 +593,85 @@ function showToast(msg, type = "") {
   setTimeout(() => t.remove(), 3000);
 }
 
-// ── Keyboard shortcuts 
+// ── Keyboard shortcuts
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") { closeTaskModal(); closeTagModal(); }
 });
 
 function openLogin(tab = "login") {
-
   document.getElementById("landingPage").style.display = "none";
-
-  document.getElementById("loginScreen")
-          .classList.add("active");
-
+  document.getElementById("loginScreen").classList.add("active");
   switchLoginTab(tab);
 }
 
 function backToLanding(){
-
-    document.getElementById("landingPage").style.display = "block";
-
-    document.getElementById("loginScreen")
-            .classList.remove("active");
+  document.getElementById("landingPage").style.display = "block";
+  document.getElementById("loginScreen").classList.remove("active");
 }
 
 function toggleChat(){
-
-  const chat =
-    document.getElementById("aiChatbot");
-
-  chat.style.display =
-    chat.style.display === "flex"
-      ? "none"
-      : "flex";
+  const chat = document.getElementById("aiChatbot");
+  chat.style.display = chat.style.display === "flex" ? "none" : "flex";
 }
 
 function addMessage(text,type){
-
-  const messages =
-    document.getElementById("chatMessages");
-
-  const div =
-    document.createElement("div");
-
-  div.className =
-    type === "user"
-      ? "chat-user"
-      : "chat-ai";
-
-  div.innerHTML =
-    `<div class="chat-bubble">
-      ${esc(text)}
-    </div>`;
-
+  const messages = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = type === "user" ? "chat-user" : "chat-ai";
+  div.innerHTML = `<div class="chat-bubble">${esc(text)}</div>`;
   messages.appendChild(div);
-
-  messages.scrollTop =
-    messages.scrollHeight;
+  messages.scrollTop = messages.scrollHeight;
 }
 
 async function sendAIMessage(){
-
-  const input =
-    document.getElementById("chatInput");
-
-  const message =
-    input.value.trim();
-
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
   if(!message) return;
 
   addMessage(message,"user");
-
   input.value = "";
-
   addMessage("Đang suy nghĩ...","ai");
 
   try{
-
-    const reply =
-      await askAI(message);
-
-    const msgs =
-      document.querySelectorAll(".chat-ai");
-
-    msgs[msgs.length-1].innerHTML =
-      `<div class="chat-bubble">
-        ${reply}
-      </div>`;
-
+    const reply = await askAI(message);
+    const msgs = document.querySelectorAll(".chat-ai");
+    msgs[msgs.length-1].innerHTML = `<div class="chat-bubble">${reply}</div>`;
   }catch(err){
-
-    const msgs =
-      document.querySelectorAll(".chat-ai");
-
-    msgs[msgs.length-1].innerHTML =
-      `<div class="chat-bubble">
-        Lỗi: ${err.message}
-      </div>`;
+    const msgs = document.querySelectorAll(".chat-ai");
+    msgs[msgs.length-1].innerHTML = `<div class="chat-bubble">Lỗi: ${err.message}</div>`;
   }
 }
 
 let calendarDate = new Date();
 
 function changeMonth(step){
-
-  calendarDate.setMonth(
-    calendarDate.getMonth() + step
-  );
-
+  calendarDate.setMonth(calendarDate.getMonth() + step);
   loadCalendar();
 }
 
 function loadCalendar(){
+  const year  = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
 
-  const year =
-    calendarDate.getFullYear();
+  document.getElementById("calendarMonth").textContent = `Tháng ${month+1} / ${year}`;
 
-  const month =
-    calendarDate.getMonth();
-
-  document.getElementById(
-    "calendarMonth"
-  ).textContent =
-    `Tháng ${month+1} / ${year}`;
-
-  const firstDay =
-    new Date(year,month,1).getDay();
-
-  const daysInMonth =
-    new Date(year,month+1,0).getDate();
-
-  const calendar =
-    document.getElementById("calendarDays");
+  const firstDay    = new Date(year,month,1).getDay();
+  const daysInMonth = new Date(year,month+1,0).getDate();
+  const calendar    = document.getElementById("calendarDays");
 
   let html = "";
-
   for(let i=0;i<firstDay;i++){
     html += `<div class="calendar-cell empty"></div>`;
   }
 
   for(let day=1;day<=daysInMonth;day++){
-
-    const dateStr =
-      `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-    const tasks =
-      allTasks.filter(
-        t => t.deadline &&
-        t.deadline.slice(0,10) === dateStr
-      );
+    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const tasks = allTasks.filter(t => t.deadline && t.deadline.slice(0,10) === dateStr);
 
     html += `
       <div class="calendar-cell">
-
-        <div class="calendar-date">
-          ${day}
-        </div>
-
-        ${tasks.map(t=>`
-          <div class="calendar-task">
-            ${esc(t.title)}
-          </div>
-        `).join("")}
-
+        <div class="calendar-date">${day}</div>
+        ${tasks.map(t=>`<div class="calendar-task">${esc(t.title)}</div>`).join("")}
       </div>
     `;
   }
@@ -768,84 +682,38 @@ function loadCalendar(){
 let notifications = [];
 
 function toggleNotifications(){
-
-  const panel =
-    document.getElementById(
-      "notificationPanel"
-    );
-
-  panel.style.display =
-    panel.style.display === "block"
-      ? "none"
-      : "block";
+  const panel = document.getElementById("notificationPanel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
 }
 
 function loadNotifications(){
-
-  const today =
-    todayStr();
-
+  const today = todayStr();
   notifications = [];
 
   allTasks.forEach(task => {
+    if(!task.deadline) return;
+    const deadline = task.deadline.slice(0,10);
 
-    if(!task.deadline)
-      return;
-
-    const deadline =
-      task.deadline.slice(0,10);
-
-    if(
-      deadline < today &&
-      task.status !== "done"
-    ){
-      notifications.push({
-        type:"overdue",
-        text:`⚠️ ${task.title} đã quá hạn`
-      });
+    if(deadline < today && task.status !== "done"){
+      notifications.push({ type:"overdue", text:`Đã quá hạn: ${task.title}` });
+    } else if(deadline === today && task.status !== "done"){
+      notifications.push({ type:"soon", text:`Hôm nay: ${task.title}` });
     }
-
-    else if(
-      deadline === today &&
-      task.status !== "done"
-    ){
-      notifications.push({
-        type:"soon",
-        text:`📅 Hôm nay: ${task.title}`
-      });
-    }
-
   });
 
   renderNotifications();
 }
 
 function renderNotifications(){
-
-  document.getElementById(
-    "notificationBadge"
-  ).textContent =
-    notifications.length;
-
-  const list =
-    document.getElementById(
-      "notificationList"
-    );
+  document.getElementById("notificationBadge").textContent = notifications.length;
+  const list = document.getElementById("notificationList");
 
   if(!notifications.length){
-
-    list.innerHTML =
-      `<div class="notification-item">
-        Không có thông báo
-      </div>`;
-
+    list.innerHTML = `<div class="notification-item">Không có thông báo</div>`;
     return;
   }
 
-  list.innerHTML =
-    notifications.map(n => `
-      <div class="notification-item ${n.type}">
-        ${n.text}
-      </div>
-    `).join("");
+  list.innerHTML = notifications.map(n => `
+    <div class="notification-item ${n.type}">${n.text}</div>
+  `).join("");
 }
